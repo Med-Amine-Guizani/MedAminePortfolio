@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { person } from '../data/profile';
-import { gsap, reduced, scrambleTo, scrollState, ease } from '../lib/motion';
+import { gsap, reduced, scrambleTo, scrollState, scrollToId, ease } from '../lib/motion';
 import PortraitParticles from './PortraitParticles';
 import { Split, Magnetic } from './ui';
 
 const ROLES = ['Full-Stack AI Engineer', 'LangGraph agent builder', 'RAG + tool calling', 'Shipping to production'];
 
-export default function Hero({ booted, onAsk }: { booted: boolean; onAsk: () => void }) {
+export default function Hero({ booted }: { booted: boolean }) {
   const root = useRef<HTMLElement>(null);
   const role = useRef<HTMLSpanElement>(null);
 
@@ -100,8 +100,8 @@ export default function Hero({ booted, onAsk }: { booted: boolean; onAsk: () => 
             Currently: {person.current}
           </span>
           <Magnetic>
-            <button className="btn btn-ember" onClick={onAsk} data-cursor="ask">
-              Ask my agent <kbd>Ctrl K</kbd>
+            <button className="btn btn-ember" onClick={() => scrollToId('contact')} data-cursor="hello">
+              Get in touch
             </button>
           </Magnetic>
         </div>

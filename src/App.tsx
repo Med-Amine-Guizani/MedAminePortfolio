@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import AgentConsole from './components/AgentConsole';
 import Cursor from './components/Cursor';
 import Finale from './components/Finale';
 import Hero from './components/Hero';
@@ -40,7 +39,6 @@ const cancelIdle = (id: number) => (hasIdle ? window.cancelIdleCallback(id) : wi
 
 export default function App() {
   const [booted, setBooted] = useState(false);
-  const [agentOpen, setAgentOpen] = useState(false);
   const [mounted, setMounted] = useState(0);
   const onBooted = useCallback(() => setBooted(true), []);
   const ready = mounted >= CHAPTERS.length;
@@ -68,12 +66,11 @@ export default function App() {
       <Cursor />
       <div className="grain" aria-hidden="true" />
       <main>
-        <Hero booted={booted} onAsk={() => setAgentOpen(true)} />
+        <Hero booted={booted} />
         {CHAPTERS.slice(0, mounted)}
       </main>
       {/* Mounted last so its triggers measure after every pin exists. */}
       {ready && <Spine />}
-      <AgentConsole open={agentOpen} setOpen={setAgentOpen} />
     </>
   );
 }

@@ -81,7 +81,7 @@ export default function Finale() {
       <footer className="footer">
         <span>© 2026 {person.fullName} · {person.location}</span>
         <span className="footer-colophon">
-          Designed and engineered by Amine, with AI as co-pilot. The agent on this page runs entirely in your browser.
+          Designed and engineered by Amine, with AI as co-pilot.
         </span>
       </footer>
     </section>

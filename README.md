@@ -14,7 +14,6 @@ npm run preview
 | Path | What |
 | --- | --- |
 | `src/data/profile.ts` | Every claim on the site. Facts come from `Resume/my_experiences.md`, so edit here first. |
-| `src/lib/agent.ts` | Knowledge base + retrieval for the in-browser "Ask my agent" console. Keep it in sync with `profile.ts`. |
 | `src/lib/motion.ts` | Motion tokens, Lenis + GSAP setup, velocity skew, scramble text. |
 | `src/components/` | One file per chapter, plus visuals (`JourneyVisuals`, `ProductionVisuals`, `Globe`, `PortraitParticles`). |
 | `scripts/` | `gen:globe` (land dots), `gen:images` (portrait variants), `gen-og.mjs` (share card), `shots` (screenshot QA). |

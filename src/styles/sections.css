@@ -1,4 +1,4 @@
-﻿/* ───────── Shared chapter frame ───────── */
+/* ───────── Shared chapter frame ───────── */
 .chapter {
   position: relative;
   padding: clamp(60px, 12vh, 140px) var(--gutter) clamp(60px, 12vh, 140px) calc(var(--gutter) + 44px);
@@ -1651,14 +1651,6 @@
   }
   .stack-box {
     height: 70svh;
-  }
-  .agent {
-    top: auto;
-    height: min(78svh, 640px);
-    right: 8px;
-    left: 8px;
-    bottom: 8px;
-    width: auto;
   }
 }
 

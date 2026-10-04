@@ -1,207 +1,245 @@
-# Build Prompt: Mohamed Amine Guizani's Portfolio
+# Build Prompt v2: Amine Guizani's Portfolio, "The Path"
 
-> Paste this whole file into Claude Code, opened in `C:\Users\amine\OneDrive\Desktop\Portfolio`.
+> Open Claude Code in `C:\Users\amine\OneDrive\Desktop\Portfolio` and say: **"Follow PORTFOLIO_PROMPT.md"**.
+> v1 (dark, ember, terminal-styled) is in git history at commit `aea16ec`. This prompt replaces it.
+
+---
+
+## What changed from v1, and why
+
+Amine liked v1's craft but not its feel. It reads like "a matrix world": terminal boot logs, mono JSON traces, an agent console, a dark hacker mood. The new version must feel **human, warm and cinematic**, like a well-made brand film about a person, not a code demo.
+
+| v1 (remove) | v2 (build) |
+| --- | --- |
+| Dark near-black + ember orange | **Blue and white**, Amine's personal brand colours (LinkedIn) |
+| Terminal preloader, trace lines, mono "machine voice", JSON payloads | Human, editorial typography; plain-language storytelling |
+| "Ask my agent" console | Removed (already deleted in code) |
+| Particle portrait | His real photo, beautifully treated |
+| Tech demos per job (RAG viz, patch diff, physics toolbelt) | **What he learned at each step**, told visually |
+| Desktop-first horizontal pinned scroll | **Phone-first**. About 80% of visitors arrive from a phone (LinkedIn) |
+| Auveillese freelance card | Removed. Amine doesn't want it shown. |
+
+Keep from v1: the Vite + React + TypeScript project, GSAP + ScrollTrigger, the GitHub Pages deploy workflow and `base: '/MedAminePortfolio/'`, the build/QA scripts in `scripts/`, the staged chapter mounting in `App.tsx`, the honesty rules, and the share card / SEO setup (regenerate the OG image in the new colours). Reuse the canvas `Globe` only if it can be recoloured and kept light on phones.
 
 ---
 
 ## Your role
 
-You are a team of three people working as one:
-1. **An award-level creative director.** You think in story, rhythm and emotion. You care about the kind of site that wins Awwwards Site of the Day.
-2. **A senior motion designer.** You choreograph every transition the way a film editor cuts a trailer.
-3. **A senior front-end engineer.** You ship that vision at 60fps on a mid-range phone, accessibly, with no jank.
-
-Build a portfolio website for **Mohamed Amine Guizani**, positioning him as a **Full-Stack AI Engineer**. The site must feel like an experience, not a résumé. A recruiter or engineering lead who lands on it should keep scrolling to the very last pixel and leave with goosebumps.
-
-Do not settle for a template look. If a section looks like something on a "top 10 portfolio templates" list, redo it.
+Act as a creative director, a senior motion designer and a senior front-end engineer working as one. The bar is an Awwwards-level personal site **that is at its best on a phone**. A recruiter who taps the link from LinkedIn on their phone should scroll to the end, feel something, and want to message Amine.
 
 ---
 
-## Sources of truth (read these first)
+## Sources of truth
 
 | What | Where |
 | --- | --- |
-| Full verified experience bank | `C:\Users\amine\OneDrive\Desktop\Resume\my_experiences.md` |
-| AI-focused résumé (best framing reference) | `C:\Users\amine\OneDrive\Desktop\Resume\Applications\LOOYAS_AI_Engineer\Amine_Guizani_AI_Engineer_LOOYAS.tex` |
-| General English résumé | `C:\Users\amine\OneDrive\Desktop\Resume\Resume_Template\English_Resume\Amine_Guizani_Cv.tex` |
-| Portrait photo | `C:\Users\amine\Downloads\MyResumePicture.png` (864×864 PNG, already cropped to a circle with transparent corners, light grey studio background, light-blue shirt) |
+| Verified experience bank | `C:\Users\amine\OneDrive\Desktop\Resume\my_experiences.md` |
+| Current site content | `src/data/profile.ts` (update it, it stays the single source for every claim) |
+| Portrait | `public/portrait-480.webp`, `portrait-864.webp` (+ `.avif`); original at `assets/portrait-src.png` |
+| New facts from Amine (2026-10-04) | The chapter notes below. These come from Amine directly and are verified. |
 
-Copy the photo into the project (`public/` or `src/assets/`) and generate optimized WebP/AVIF versions. Never hotlink the Downloads path.
-
-### Honesty rules (non-negotiable)
-
-These rules come from `my_experiences.md`. Every claim on the site must trace back to that file or to this prompt.
-- **Never invent** metrics, clients, plant names or locations, user counts, technologies, or outcomes. If a number would make a section stronger but none exists, use language or visuals instead. Never fake a number.
-- The **only verified metrics** are **60% faster delivery of client enhancement requests** and **20% fewer re-renders**, both at Cognira. Use them big and proudly.
-- Do **not** claim "Machine Learning" as a personal skill. Do not claim LangChain, MCP, vector databases, reranking, multi-provider LLM routing, or eval/observability frameworks.
-- Do not reproduce AVOCarbon's internal specification, customer names, or internal business rules.
+### Honesty rules (unchanged, non-negotiable)
+- Never invent metrics, user counts, plant names or locations, clients, technologies or outcomes.
+- The only numbers are:
+  - the national engineering entrance exam rank, **100th out of 800**;
+  - Cognira's **60% faster delivery of client enhancement requests** and **20% fewer re-renders**;
+  - the derogation platform's **4 roles** and **2-level approval workflow**.
+- The baccalaureate honour is **"Mention Très Bien"** (in English: *with highest honours*). Show it as an honour, not as a number or grade average.
+- The AVOCarbon intelligence agent is **in development**. Never call it deployed.
+- Do not claim "Machine Learning" as a personal skill, or LangChain, MCP, vector databases, reranking, multi-provider LLM routing or eval frameworks.
+- Do not reproduce AVOCarbon's internal specification, customer names or internal business rules.
+- Don't mention Auveillese anywhere on the site.
 
 ---
 
-## The person: content to use
+## Brand: blue and white
 
-**Name:** Mohamed Amine Guizani (display it as "Amine Guizani" in the hero; use the full name in the meta, footer and structured data)
-**Title:** Full-Stack AI Engineer
-**Location:** Tunis, Tunisia. Open to relocation (needs visa sponsorship; do not state work authorization anywhere).
-**Contact:** amineguizani33@gmail.com · (+216) 95 954 110 · [LinkedIn](https://www.linkedin.com/in/mohamed-amine-guizani/) · [GitHub](https://github.com/Med-Amine-Guizani)
-**Languages:** Arabic (native), English (advanced, TOEIC 915/990), French (upper-intermediate), German (A2)
+Amine brands himself in **blue and white**: his LinkedIn, and the logos of the companies he has joined. Use **only blue, its shades, and white** (plus neutral greys for body text). No orange, no green. Use a single success tint only if a status badge truly needs it; prefer a blue "Live" badge.
 
-### Headline facts the site MUST communicate
-1. **He is currently employed as a Full-Stack & AI Engineer at AVOCarbon Group** (since August 2026). AVOCarbon is an international industrial manufacturer with plants around the world.
-2. **His work at AVOCarbon is already in production**, delivering real value and supporting people across AVOCarbon's plants worldwide. Make this the emotional climax of the site.
-   - **Derogation Management Platform: in production.** A request and approval platform with 4 roles, a two-level approval workflow, configurable notifications, and responsibility matrices configurable per plant. Stack: Python, FastAPI, SQLAlchemy, Alembic, React.
-   - **Role-Based Intelligence Agent: in active development.** An AI agent built in Python + LangGraph. It correlates weekly operational data from several internal applications and databases, then reasons about what changed, what is stagnating, what is blocked, and what risk or opportunity is emerging. It produces a role-specific newsletter or memo for each role, with role-based access control so each reader sees only what they are authorized to see. **Label it "In development". Never call it deployed and never attach a metric to it.**
-3. **He graduated from ENICarthage** (National School of Engineering of Carthage) with a national engineering degree in Software Engineering in **July 2026**. Write "Class of 2026" or "Graduated July 2026". Avoid "2 months ago", which goes stale.
+Starting palette (refine it, check contrast, and ask Amine for his exact LinkedIn hex if he has one):
 
-### The journey (the narrative spine)
-| When | Where | The story beat |
+| Token | Hex | Use |
 | --- | --- | --- |
-| 2021–2023 | **IPEIN**, Nabeul Preparatory Engineering Institute (Physics & Technology) | The foundation: rigor, maths, physics |
-| Jul–Aug 2024 | **BS Automation**, intern | C++ and Angular low-code workflows that make collaborative-robot setup simpler for factories; worked with a German client; Scrum |
-| Jun–Aug 2025 | **Capgemini Engineering**, intern | An end-to-end HR internship-lifecycle platform: Spring Boot + Spring Security (JWT, RBAC), Angular, an email intake pipeline, a Kanban board, **LLM-based resume analysis and scoring with structured JSON output**, and **semantic vector search** to detect duplicate projects |
-| Feb–Jun 2026 | **Cognira**, final-year project (PFE), Atlanta-based AI retail startup, Tunis R&D | Built **Configuration Studio** for PromoAI: replaced GitOps file editing with a 4-click UI, giving **60% faster client enhancement delivery** and **20% fewer re-renders** (React + Redux Toolkit), plus a propagation engine with deviation detection. Integrated a **conversational AI agent (RAG + tool calling)** into NestJS that operates on live configuration JSON through structured tool calls and patch synchronization with the UI, with Redis sessions and a human kept in the loop |
-| Jun–Jul 2026 | **Auveillese**, freelance (Portugal, remote) | NestJS + React for hotel platforms, from reservations to energy monitoring |
-| Jul 2026 | **ENICarthage**, graduation | Software Engineering degree |
-| Aug 2026 → now | **AVOCarbon Group**, Full-Stack & AI Engineer | Production software used across plants worldwide, plus an AI agent in development |
+| `--white` | `#FFFFFF` | Main background |
+| `--ice` | `#F3F7FF` | Alternate light sections, cards |
+| `--mist` | `#DCE7FB` | Borders, soft fills |
+| `--sky` | `#7FB2FF` | Highlights on navy, glows |
+| `--blue` | `#2563EB` | Primary brand blue: links, accents, the path |
+| `--royal` | `#1D3FBF` | Pressed states, deep accents |
+| `--navy` | `#0A1A3F` | Immersive "night" chapters, headings on white |
+| `--ink` | `#0E1730` | Body text on white |
+| `--slate` | `#5B6785` | Secondary text (must pass 4.5:1 on white) |
 
-### Side projects
-- **WatchWise**: MERN movie platform with JWT, TMDB caching, and a customized Recombee recommendation engine. [GitHub](https://github.com/Med-Amine-Guizani/WatchWise) · [Live demo](https://watch-wise-pink.vercel.app/)
-- **Smart City Shield** (academic): Java/Spring Cloud microservices talking REST, GraphQL, SOAP and gRPC, with API Gateway, Service Discovery, and Docker.
+Rhythm: mostly **white and airy**, with a few **deep-navy immersive chapters** (Prepa nights, the AVOCarbon climax, the ending) where the background colour itself animates from white to navy and back as you scroll. That contrast is a big part of the "wow".
 
-### Stack (only these)
-- **AI:** LangGraph, agent orchestration, RAG, tool calling, conversational agents, LLM document analysis/scoring, semantic vector search
-- **Languages:** Python, TypeScript, JavaScript, Java, C, C++
-- **Frontend:** React, Redux Toolkit, Angular
-- **Backend:** FastAPI, NestJS, Node.js, Express, Spring Boot, Spring Security
-- **Data:** PostgreSQL, SQLAlchemy, Alembic, Oracle PL/SQL, MySQL, MongoDB, Redis
-- **Ops:** Docker, Docker Compose, Kubernetes, CI/CD, GitHub Actions, Linux
+**Typography: human, not code.**
+- One expressive display face for headlines (a modern serif such as *Instrument Serif* or *Fraunces*, or a warm grotesk), and a clean, very readable sans for body (for example *Inter Tight*, *Manrope* or *Geist*).
+- **No monospace as a voice.** Optionally, a serif italic for the emotional words in a headline ("*real* users").
+- Big, confident headlines that still fit a 360px-wide screen without breaking words.
+- Self-host or async-load fonts with metric-matched fallbacks (v1 has the technique in `src/styles/tokens.css`) to avoid layout shift.
 
 ---
 
-## Creative concept: "Signal → Production"
+## Company and school logos
 
-The whole site is a single scroll-driven film about **turning raw signal into running systems**, which is exactly what a full-stack AI engineer does. The visitor's scroll is the agent's execution: each chapter is a **node in a graph** (a quiet nod to LangGraph), connected by a glowing **edge line** that draws itself as you scroll and travels the full length of the page.
+Show the real logo at every step. The logos are the milestones of the story.
 
-**Mood:** dark, cinematic, precise. Think of a mission-control room at night: deep near-black background (not pure #000), one electric accent color (for example, an ion-cyan or a "carbon-ember" orange that nods to AVOCarbon; pick one and commit), warm off-white text, and a mono font for "machine voice" labels.
-**Typography:** one oversized, characterful display face (for example, a variable grotesk from Google Fonts that can animate its weight axis) plus a clean text face and a mono. Headlines are huge, sometimes bigger than the viewport, and set with confidence.
+| Step | Organisation | File to create |
+| --- | --- | --- |
+| Baccalaureate | Tunisian national baccalaureate (no logo; use a typographic "Bac" seal in blue instead) | none |
+| Prepa | IPEIN, Institut Préparatoire aux Études d'Ingénieurs de Nabeul | `public/logos/ipein.svg` |
+| Engineering school | ENICarthage, École Nationale d'Ingénieurs de Carthage | `public/logos/enicarthage.svg` |
+| Internship 1 | BS Automation | `public/logos/bs-automation.svg` |
+| Internship 2 | Capgemini Engineering | `public/logos/capgemini.svg` |
+| Internship 3 (PFE) | Cognira | `public/logos/cognira.svg` |
+| Job | AVOCarbon Group | `public/logos/avocarbon.svg` |
 
-### Chapter by chapter
+- **Sourcing:** use the official logo from the organisation's own website, press kit, or Wikimedia Commons. Prefer SVG, otherwise a transparent PNG at 2× size. Save the files locally; never hotlink.
+- **If you can't find a clean official file, stop and ask Amine** to drop it in `public/logos/` under the name above. Don't redraw a logo or approximate it with text in a lookalike font.
+- **Treatment:** never distort, recolour inside the mark, or crop a logo. To fit the blue-and-white brand, show each logo on a white rounded "badge" (keeping its original colours), or as a single-colour white/navy version only where the organisation publishes one.
+- Each logo is a motion moment (see "The path" below). Give every logo an `alt` with the organisation's name.
 
-**00 · Boot (preloader, ≤ 2.5s, skippable)**
-A terminal-like counter streams fake-but-tasteful agent log lines (`> loading context… > resolving graph… > ready`) while a percentage counts up. On "ready", the screen splits or irises open into the hero. Never let it block content for long; first-time visitors only (remember this in sessionStorage).
-
-**01 · Hero: "I build software that thinks, and ships."** (write a better line if you can)
-- The portrait **assembles from particles or ASCII glyphs** that converge into the photo, reacting subtly to the cursor (a WebGL shader or canvas). On mobile, use a lighter version of the effect.
-- The name animates in letter by letter with a masked rise. The title "Full-Stack AI Engineer" cycles through a scramble/decode text effect.
-- A small live status pill reads: **"● Currently: Full-Stack & AI Engineer @ AVOCarbon"**.
-- A scroll cue invites the visitor down. The graph edge starts here.
-
-**02 · Origin: "Built on physics."**
-IPEIN → ENICarthage. A short, poetic beat. Equations or circuit lines morph into code. Ends on a **graduation moment**: "ENICarthage · Software Engineering · Class of 2026", with a cap-toss particle burst or a stamp/seal animation.
-
-**03 · The Journey: pinned horizontal scroll**
-The section pins and the internships slide horizontally like film frames: BS Automation → Capgemini → Cognira → Auveillese. Each card has its own micro-visual:
-- *BS Automation:* a wireframe robot arm articulating.
-- *Capgemini:* resumes flying into a Kanban board, then scored by an LLM to JSON.
-- *Cognira:* a config tree collapsing into "4 clicks", with **60%** and **20%** counting up in huge type.
-- *Auveillese:* a hotel energy graph pulsing.
-
-**04 · The Climax: AVOCarbon, "Now in production. Around the world."**
-This is the goosebumps moment. Slow everything down here.
-- The screen goes nearly black and silent. One line types out: *"August 2026. First job. Real users."*
-- A **3D globe** (or a stylised dotted world map) fades in. **Arcs of light launch from Tunisia** and connect to points around the world, representing AVOCarbon's plants. **Do not label specific plant cities or countries unless Amine provides them; keep the points abstract and unlabeled.**
-- Headline: **"Software in production, supporting people across AVOCarbon's plants worldwide."**
-- Two project panels follow:
-  - **Derogation Management Platform**, with a **PRODUCTION** badge glowing green. Animate the approval workflow: a request travels through 4 roles and 2 approval levels while notification pings fire.
-  - **Role-Based Intelligence Agent**, with an **IN DEVELOPMENT** badge (amber, pulsing). Animate a LangGraph-style node graph: data sources flow in, then reason, then fan out into different memos for different roles, with some content visibly redacted/blurred per role to show RBAC.
-
-**05 · Lab: side projects**
-WatchWise and Smart City Shield as tilt/hover cards with a magnetic cursor, video-like previews (CSS/canvas loops are fine), and real links.
-
-**06 · Stack: "The toolbelt"**
-Not a boring logo grid. Ideas: a physics playground where skill chips fall and can be thrown around (Matter.js), or an orbiting constellation grouped by layer (AI / Front / Back / Data / Ops). Pick the one that runs smoothest.
-
-**07 · Finale: "Let's build what's next."**
-The graph edge that has run through the whole page finally reaches its **terminal node** and explodes into light, then resolves into a huge email link with a magnetic hover and copy-to-clipboard. Add LinkedIn, GitHub, and a "Download CV" button. Languages go here as a quiet line. Close with a footer sign-off.
+**Optional photos:** ask Amine whether he has photos from prepa, ENICarthage, his teams (Cognira, AVOCarbon) or a plant visit. Real photos of people make the "I learned from great people" chapters land. The design must still work beautifully without them.
 
 ---
 
-## The "this guy really knows AI" layer
+## The story: chapter by chapter
 
-Saying "AI engineer" is not enough. The site itself must **show** AI fluency, so a visitor thinks *"wow, this dude knows how to use AI."* Weave these through the experience:
+Write in **first person**, warm and plain, with short sentences that read well on a phone. Each step answers one question: **what did I get out of it?** The copy below is a starting draft built from Amine's own words. Polish it and keep its meaning. Each chapter has: the logo + dates, a one-line headline, 2–4 short "what I took from it" lines, and at most one proof point.
 
-1. **"Ask my agent" console (the centerpiece).** Add a floating command bar (⌘K / Ctrl+K, plus a visible button) that opens an agent console. The visitor asks things like *"What has Amine shipped to production?"* or *"Show me his RAG work"*. The console then **visibly executes like a real agent**:
-   - It streams a plan, then fires **tool calls** shown as cards, for example `search_experience({"query":"production"})`, `get_project("derogation-platform")`, `check_access(role="visitor")`.
-   - It returns a streamed answer **and drives the page**: it scrolls to the right section, highlights the relevant card, and draws the graph edge to it.
-   - It shows a small trace panel (node graph lighting up step by step, token stream, timings).
-   - **Implementation:** by default, build it as a **deterministic, client-side agent** over a structured `profile.json` (intent matching + keyword/embedding-free retrieval). Label it subtly: "runs locally on this page". Optionally add a real-LLM mode through a serverless proxy (for example a Cloudflare Worker holding the API key, grounded only on `profile.json`, with rate limiting). **Never put an API key in the client, and ask Amine before setting up any external service.**
-2. **Live agent traces as visual language.** Section transitions use agent-trace aesthetics: JSON tool-call payloads that type themselves out, then collapse into the UI they describe. In the Cognira section, the configuration JSON literally gets patched live (a diff animation) to show "agent operates on live state via structured tool calls + patch sync."
-3. **RAG made visible.** In the Capgemini/Cognira beats, animate retrieval: a query vector flies into a field of document points, the nearest neighbors light up, and they flow into a response. Keep it explanatory and beautiful, not a gimmick.
-4. **RBAC memo demo.** In the AVOCarbon agent panel, let the visitor **toggle the viewer role** (e.g. "Plant Manager", "Sales", "Executive", all generic and invented-as-example, clearly illustrative). The same memo re-renders with different sections revealed or redacted, with a smooth morph between states.
-5. **Human-in-the-loop moment.** One interaction where the "agent" proposes a change and the visitor clicks **Approve**. This echoes his philosophy of keeping humans at the center.
-6. **Built-with-AI colophon.** In the footer, add an honest, confident line about how the site was built (AI-assisted, engineered and directed by Amine). This frames him as someone who wields AI tools expertly.
+### 0 · Hero
+- His photo, treated in blue: a duotone, or a circular reveal from a blue disc.
+- Name: **Amine Guizani**. Eyebrow: **Full-Stack & AI Engineer · AVOCarbon Group**.
+- Headline options (pick one or write a better one):
+  - "I build software people actually use, and AI helps me ship it faster."
+  - "From problem sets to production."
+  - "Every step taught me something. Here's the path."
+- Small line: "ENICarthage, Class of 2026. Today my work runs in AVOCarbon's plants around the world."
+- Two buttons: **Get in touch** (scrolls to contact) and **LinkedIn**.
+- A gentle cue to scroll (and on phones, to swipe up).
 
-Everything shown in these demos must be **illustrative of his real work** and use only facts from `my_experiences.md`. Demo data such as example memos and roles must be clearly generic and must never look like real AVOCarbon data.
+### 1 · Where it started: Baccalaureate, then Prepa at IPEIN (2021–2023)
+- **Baccalaureate in Technical Sciences** (*Sciences Techniques*), **with highest honours** (*Mention Très Bien*). This is the first milestone on the path, shown as a blue seal or stamp: "Bac · Technical Sciences · Mention Très Bien".
+  - The bac year is presumably 2021, since prepa started in September 2021. Confirm with Amine before printing a year.
+- Then prepa. Headline: *"Two years of learning how to think."*
+- What I took from it: **problem solving**. Maths and physics every day taught me to break a hard problem down, model it, and not let go until it's solved. I still work that way.
+- The payoff: **ranked 100th out of 800** in the national engineering entrance exam (*concours national d'entrée aux écoles d'ingénieurs*), which opened the door to ENICarthage.
+- Motion idea: hand-drawn equations and pencil sketches stroke themselves onto the page. Then a ranking counter rolls and settles on **100 / 800**, and everything resolves into one clean blue line: the path that runs through the rest of the site.
+
+### 2 · ENICarthage (2023–2026): the fundamentals, and the people
+- Headline: *"The fundamentals, and the people."*
+- What I took from it:
+  - Computer-science fundamentals from the ground up: algorithms, systems, databases, networks, software architecture.
+  - The people. Through networking I met many interesting people, classmates and professors, and learned a lot from them.
+  - Graduated **July 2026**, national engineering degree in Software Engineering.
+- Motion idea: dots appear one by one and connect into a growing network of people as you scroll (abstract dots only, no fake faces or names). It ends on a graduation moment: a seal or diploma stamp in blue.
+
+### 3 · BS Automation, internship (Jul–Aug 2024): my first client
+- Headline: *"My first client, and my first robots."*
+- What I took from it:
+  - **Dealing with clients**: working with a German client to clarify what they really needed and agree on acceptance criteria.
+  - **Robotics**: C++ and Angular for a platform that makes collaborative robots easier to set up in factories.
+  - **The startup environment**: a small team, real ownership, moving fast.
+  - **Scrum in practice**: daily meetings, sprint planning, delivering in increments.
+- Motion idea: a clean line-drawn robot arm moves through its setup steps while a sprint loop (circle) completes around it.
+
+### 4 · Capgemini Engineering, internship (Jun–Aug 2025): shipping end to end
+- Headline: *"My first project, end to end."*
+- What I took from it:
+  - **Owning a project from start to finish**: a platform that automates the whole internship lifecycle, from applications arriving by email to archiving the finished project, built and shipped.
+  - **The first time I used AI to make the experience better**: an LLM reads each application and scores the fit, and semantic search finds similar past projects. It wasn't AI for show; it saved HR real effort.
+- Proof (optional): Spring Boot, Angular, LLM scoring, semantic search.
+- Motion idea: a single application card travels through the whole flow (inbox → AI score → interview → onboarding → archive) and lands as "shipped".
+
+### 5 · Cognira, final-year project (Feb–Jun 2026): inside a product company
+- Headline: *"Learning how a real product company works."*
+- What I took from it:
+  - **How a SaaS company like Cognira builds, ships and supports a product** (PromoAI, for retailers).
+  - **Going deep on JavaScript and TypeScript.**
+  - **A team I learned a lot from**: very competent, genuinely kind people.
+  - **Learning to work with AI**: tools like Claude Code became part of how I build.
+- Proof: big animated counters, **60%** faster delivery of client enhancement requests and **20%** fewer re-renders. One line on what he built: Configuration Studio, a low-code configuration platform with a conversational assistant (RAG + tool calling) that keeps the human in charge.
+- Mention Claude Code by name in text only. Don't use Anthropic's logo or brand marks.
+
+### 6 · AVOCarbon Group (August 2026 → now): the real thing (the climax)
+- The background deepens to **navy**. Slow everything down. One line: *"August 2026. My first job."* Then: **Full-Stack & AI Engineer at AVOCarbon Group.**
+- A world view (a recoloured globe or a dotted map) with blue arcs leaving Tunisia toward points around the world. Arcs and points stay **unlabelled and illustrative**. Add a small caption saying so, unless Amine provides the plant countries.
+- Headline: *"Software in production, used across AVOCarbon's plants worldwide."*
+- **The Derogation Management Platform, told as a loop** (this is the heart of the site; animate it as a continuous cycle):
+  1. **Listen**: I talked with the people who handle derogations to get the features right and understand the derogation flows and their pain points.
+  2. **Build with AI**: I used AI to ship the solution fast.
+  3. **Deploy**: deployed efficiently into production, used across plants.
+  4. **Watch and fix**: I keep monitoring how people use it. When something goes wrong I usually see it in the logs and fix it before anyone has to report it.
+  - Facts under the loop: 4 roles · 2-level approval workflow · configurable notifications · per-plant responsibility matrices · Python, FastAPI, SQLAlchemy, Alembic, React.
+  - Motion idea for step 4: a quiet log line flags an issue → a fix ships → the user's screen just keeps working. The user never even notices.
+  - Amine called them "clients". Use "the people who use it" or "users and stakeholders", unless he confirms another word.
+- **Building next** (small, secondary): a LangGraph agent that turns weekly operational data into a memo for each role, with access control. Badge: **In development**.
+
+### 7 · Also built (compact)
+- WatchWise (MERN, Recombee recommendations): [live demo](https://watch-wise-pink.vercel.app/) · [GitHub](https://github.com/Med-Amine-Guizani/WatchWise).
+- Smart City Shield (academic, Spring Cloud microservices).
+- On phones: a horizontal swipe row of two cards.
+
+### 8 · Toolbox (compact)
+- Grouped chips: AI · Languages · Front end · Back end · Data · Ops, from `profile.ts`. A smooth marquee or staggered reveal, **not** a physics playground (dragging conflicts with scrolling on phones).
+
+### 9 · Ending: let's talk
+- Back to light: a soft blue gradient sky. Headline: *"Let's build what's next."*
+- A huge tappable email (with a copy button), plus LinkedIn and GitHub, and the phone number as a `tel:` link.
+- Languages as a quiet line: Arabic (native), English (advanced, TOEIC 915/990), French (upper-intermediate), German (A2).
+- Footer: © 2026 Mohamed Amine Guizani · Tunis, Tunisia.
 
 ---
 
-## Motion design system (a first-class requirement)
+## Motion design: immersive, smooth, human
 
-**Motion level: HEAVY.** This is a motion-design showcase as much as a portfolio. Every scroll pixel should move something meaningful, every hover should respond, and every transition should feel crafted. It must still be **butter-smooth**: heavy in craft, never heavy in jank. If an effect drops frames on a mid-range laptop, simplify it until it doesn't.
+**Concept: "The Path".** One continuous blue line runs through the whole story like a road. It's born in the prepa sketches, draws itself as you scroll, and passes through each chapter. At every milestone the organisation's **logo arrives on the path**: it scales up into the centre, holds, then docks into the chapter's header. The path ends at the contact section.
 
-Motion is the soul of this site. Treat it as a designed system, not sprinkled effects.
+**Signature moments (build these at showcase level):**
+1. **Hero reveal**: a blue disc expands to reveal the photo, the name rises line by line, and a soft blue "aurora" gradient drifts slowly behind (CSS transforms only, cheap on phones).
+2. **Logo milestones**: each logo has a scrubbed scale/position move from the path into the chapter header (FLIP-style).
+3. **Background day/night**: background colour scrubs from white to navy for the immersive chapters and back again.
+4. **Lessons that land**: each "what I took from it" line reveals word by word, with a blue highlighter sweep under the key phrase.
+5. **Stacked chapter cards on phones**: each internship card sticks to the top and gently scales back and dims as the next card slides over it. This is the main mobile pattern, and it feels great under a thumb.
+6. **Counters**: the entrance-exam rank (100 / 800), then 60% and 20% at Cognira, all count up big with a soft overshoot.
+7. **The AVOCarbon loop**: the four steps orbit a centre point as a living cycle, with the "watch and fix" step pulsing.
+8. **Ending**: the path draws its last stretch and opens into the contact section.
 
-**Tokens:** define these once and use them everywhere:
-- Easings: `--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1)`, `--ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1)`, plus a soft spring for UI.
-- Durations: `micro 150ms` · `ui 300ms` · `reveal 800ms` · `cinematic 1400ms`.
-- Stagger: 40–80ms for letters and items.
-
-**Principles:**
-1. **Choreograph, don't decorate.** Each section has an entrance, a "hold" moment, and an exit that hands off to the next. Write a one-line choreography note per section before coding it.
-2. **Scroll is the timeline.** Use GSAP ScrollTrigger with `scrub` for narrative sequences and Lenis for buttery smooth scroll. Use pinning for the Journey and Climax sections.
-3. **Contrast in tempo.** Fast, punchy energy in the Journey; slow, breathing reverence in the Climax. Silence and empty space are motion tools too.
-4. **Signature interactions:** a custom cursor that morphs over links/cards (with a label such as "view", "open", "copy"), magnetic buttons, masked text reveals, scramble/decode text, number count-ups, SVG path draw (the graph edge), image reveal with clip-path, and subtle parallax depth layers.
-5. **Page-level continuity:** the single graph-edge line is the visual thread. It must never feel broken between sections.
-6. **Micro-interactions everywhere:** hover states, focus rings that animate, a scroll-progress indicator styled as graph-traversal progress (`node 04/07`).
-7. **Signature set-pieces (heavy-motion moments).** Build each of these at showcase level:
-   - **Hero:** particle portrait with cursor-reactive displacement, plus kinetic typography whose variable font weight responds to scroll velocity.
-   - **Section transitions:** WebGL or clip-path wipes, where the outgoing section shatters into glyphs that rebuild the next one.
-   - **Journey:** horizontal pinned scroll with velocity-based skew and parallax depth inside each card.
-   - **Climax:** a cinematic slow-down, a globe with arc launches synchronized to the typing text, and a camera dolly into the project panels.
-   - **Finale:** the terminal-node light explosion resolving into the contact CTA.
-   - Add page-wide **scroll-velocity reactivity**: subtle skew and blur on fast scroll that settles with an elastic return.
-8. **Smoothness budget:** keep one `requestAnimationFrame` loop (GSAP ticker driving Lenis + R3F). Never animate layout properties. Use `will-change` sparingly. Pause offscreen WebGL. Test on throttled CPU (4×) in DevTools.
-9. **Respect `prefers-reduced-motion`:** swap scrub/pin/parallax for simple fades, disable WebGL particles (show the static photo), and turn off smooth scroll. The story must still read perfectly.
+**Motion system:**
+- Tokens: ease-out-expo `cubic-bezier(0.16, 1, 0.3, 1)`, a gentle spring for taps, and durations of 150 / 300 / 800 / 1400ms. Define them once (see `src/lib/motion.ts`).
+- Animate **only `transform` and `opacity`** (and background colour on the few section wrappers). No layout properties, no `filter: blur` on large areas on phones.
+- Every chapter gets an entrance, a hold and an exit. Write a one-line choreography note per chapter before coding it.
+- Micro-interactions: buttons compress slightly on tap and spring back, and links get an animated underline.
+- `prefers-reduced-motion`: no scrubbing, pinning or parallax; simple fades only. The story must still read perfectly.
 
 ---
 
-## Tech stack
+## Phone-first engineering (about 80% of traffic)
 
-- **Vite + React + TypeScript** (static build, deployable to GitHub Pages)
-- **GSAP + ScrollTrigger** (free, including all plugins), **Lenis** for smooth scroll
-- **Three.js / React Three Fiber + drei** for the hero particles and the globe. Lazy-load these, and fall back to canvas/SVG on low-power devices.
-- **Framer Motion** only for small component-level UI transitions, if useful
-- Styling: CSS modules or Tailwind, with design tokens as CSS variables
-- **Deploy target:** his existing portfolio URL `https://med-amine-guizani.github.io/MedAminePortfolio/` (set the Vite `base` accordingly), with a GitHub Actions deploy workflow. Ask before pushing or deploying anything.
+Design and build at **390×844 first**, then scale up to tablet and desktop.
 
----
-
-## Quality bar
-
-- **Performance:** Lighthouse ≥ 90 on mobile for performance, accessibility, best practices and SEO. Code-split the 3D. Hero visible quickly (LCP < 2.5s). Keep all animation transform/opacity-only, and target 60fps.
-- **Responsive:** design mobile intentionally. On phones, the horizontal journey becomes a vertical stacked sequence, and the globe becomes a lighter 2D dotted map.
-- **Accessibility:** semantic HTML, real text (never text baked into canvas only), keyboard navigable, visible focus, alt text, sufficient contrast, preloader skippable.
-- **SEO / sharing:** title, meta description, Open Graph image (generate a striking 1200×630 card), favicon, and JSON-LD `Person` schema.
-- **Polish:** no layout shift, no flash of unstyled content, a custom 404, and a tasteful console Easter egg for engineers who open DevTools (for example, an ASCII signature plus "hire me" email).
+- **Test widths:** 360, 390, 430 (phones), 768 (tablet), 1440 (desktop). Use `scripts/shots.mjs` (it has `mobile`, `desktop` and `reduced` modes; add 360 and 430 phone modes) and look at every screenshot.
+- **Scroll:** use native touch scrolling on phones. Keep Lenis on desktop only (`syncTouch: false`). Set `ScrollTrigger.config({ ignoreMobileResize: true })` and use `svh`/`dvh` units so the iOS address bar doesn't cause jumps.
+- **No horizontal pinned sections on phones.** Use vertical sticky/stacked patterns. A swipe row is fine for small secondary content.
+- **Nothing depends on hover.** No custom cursor on touch devices. Tap targets are at least 44×44px, and primary actions sit within thumb reach.
+- **Type:** body text at least 16px on phones. Headlines must never overflow 360px. Respect safe areas (`env(safe-area-inset-*)`).
+- **Performance budget:** smooth 60fps on a mid-range Android (test with 6× CPU throttling in DevTools). Lazy-load anything below the fold. Use AVIF/WebP images with explicit width/height. No layout shift. Keep JS lean, and don't add a heavy WebGL scene unless it degrades gracefully.
+- **Targets:** Lighthouse mobile performance **≥ 85**, accessibility **100**, CLS < 0.05, LCP < 2.5s. Report the real numbers you get, even if they miss.
+- **No long preloader.** At most a sub-second name/logo intro, and none on repeat visits.
 
 ---
 
 ## Process
 
-1. Read the source files listed above.
-2. Propose, briefly: the final accent color, the font pairing, the hero headline (3 options), and the choreography note for each chapter. Then build. Don't wait for approval on taste calls; make strong choices.
-3. Build section by section. After each major section, run the dev server and check it in a browser at desktop and phone widths.
-4. Finish with a performance + reduced-motion + accessibility pass.
-5. Report back: what was built, how to run it, how to deploy, and **any place where you needed a fact you didn't have** (for example, plant locations, user counts, or a CV PDF to link). Ask for those facts. Don't invent them.
+1. Read the sources above and `src/` to see what can be reused (`motion.ts`, staged mounting, scripts, workflow).
+2. Briefly propose the palette, the font pairing, 3 hero headlines, and the choreography note for each chapter. Then build; make strong choices without waiting.
+3. Source the logos first. List any you couldn't find and ask Amine for them.
+4. Update `src/data/profile.ts` with the new story content (lessons per step, AVOCarbon loop). Remove Auveillese and all v1-only content: preloader log, trace rules, retrieval interlude, particle portrait, physics toolbelt, agent remnants.
+5. Build chapter by chapter, **phone first**. Screenshot at 390px after each chapter.
+6. Finish with a pass on phone, desktop, reduced motion, accessibility and Lighthouse.
+7. Regenerate `public/og.png` in the new blue-and-white style (`scripts/gen-og.mjs`).
+8. Before deploying, confirm the repo's **Settings → Pages → Source is "GitHub Actions"**, not "Deploy from a branch". Otherwise GitHub serves the raw source files and the site hangs.
+9. Commit and push to `main`. The GitHub Action deploys to https://med-amine-guizani.github.io/MedAminePortfolio/. Verify the live page loads the built bundle.
+10. Report what was built, the Lighthouse numbers, and any facts or assets you still need from Amine.
 
-**The test:** a hiring manager should finish the site thinking, *"This person ships real AI into production, and has taste. I need to talk to him."*
+**The test:** a recruiter opens the link on their phone from LinkedIn, scrolls to the end without noticing the time, and thinks: *"He learns fast, he listens to users, he ships real things with AI, and he's someone I'd like to work with."*
