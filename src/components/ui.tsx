@@ -1,165 +1,222 @@
-import { useEffect, useRef, type ElementType, type ReactNode } from 'react';
-import { gsap, ScrollTrigger, reduced, coarse, scrambleTo, ease } from '../lib/motion';
+import { Fragment, useEffect, useId, useRef, type ElementType, type ReactNode, type RefObject } from 'react';
+import type { Lesson, Logo } from '../data/profile';
+import { gsap, reduced } from '../lib/motion';
 
-/** Text split into masked words and characters; screen readers get the plain string. */
-export function Split({
-  text,
-  as: Tag = 'span',
+/** Splits text into masked words. `start` continues the stagger index across siblings. */
+export function Words({ text, start = 0 }: { text: string; start?: number }) {
+  const words = text.split(' ').filter(Boolean);
+  return (
+    <>
+      {words.map((w, i) => (
+        <Fragment key={i}>
+          <span className="w" style={{ '--i': start + i } as React.CSSProperties}>
+            <span>{w}</span>
+          </span>
+          {i < words.length - 1 ? ' ' : null}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+/** A headline whose words rise into place; the emphasised part is set in serif italic. */
+export function Title({
+  plain,
+  em,
+  as: Tag = 'h2',
   className = '',
+  id,
 }: {
-  text: string;
+  plain: string;
+  em?: string;
   as?: ElementType;
   className?: string;
+  id?: string;
 }) {
-  const words = text.split(' ');
+  const n = plain.split(' ').filter(Boolean).length;
   return (
-    <Tag className={`split ${className}`}>
-      <span className="sr-only">{text}</span>
-      {words.map((w, wi) => (
-        <span className="split-word" aria-hidden="true" key={wi}>
-          {[...w].map((c, ci) => (
-            <span className="ch" key={ci}>
-              {c}
-            </span>
-          ))}
-          {wi < words.length - 1 ? <span className="ch space">&nbsp;</span> : null}
-        </span>
-      ))}
+    <Tag className={`title ${className}`} data-words="" id={id}>
+      <Words text={plain} />
+      {em ? (
+        <>
+          {' '}
+          <em>
+            <Words text={em} start={n} />
+          </em>
+        </>
+      ) : null}
     </Tag>
   );
 }
 
-/** Masked rise for every `.split` inside the container, triggered on scroll. */
-export function useSplitReveal(ref: React.RefObject<HTMLElement | null>, opts: { start?: string } = {}) {
+/** Adds `.in` to reveal targets inside `ref` the first time they scroll into view. */
+export function useReveal(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
-    if (!ref.current || reduced) return;
-    const ctx = gsap.context(() => {
-      ref.current!.querySelectorAll<HTMLElement>('[data-split-reveal]').forEach((el) => {
-        gsap.from(el.querySelectorAll('.ch'), {
-          yPercent: 115,
-          rotate: 6,
-          duration: 1.1,
-          ease: ease.outExpo,
-          stagger: 0.022,
-          scrollTrigger: { trigger: el, start: opts.start ?? 'top 85%' },
-        });
-      });
-      ref.current!.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
-        gsap.from(el, {
-          y: 40,
-          opacity: 0,
-          filter: 'blur(8px)',
-          duration: 1,
-          ease: ease.outExpo,
-          delay: Number(el.dataset.reveal || 0),
-          scrollTrigger: { trigger: el, start: 'top 88%' },
-        });
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, [ref, opts.start]);
+    const root = ref.current;
+    if (!root) return;
+    const targets = root.querySelectorAll<HTMLElement>('.rv, [data-words], .lessons, .seal');
+    if (reduced) {
+      targets.forEach((t) => t.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      },
+      { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
+    );
+    targets.forEach((t) => io.observe(t));
+    return () => io.disconnect();
+  }, [ref]);
 }
 
-/** Pulls an element toward the pointer while hovered. */
-export function useMagnetic<T extends HTMLElement>(strength = 0.35) {
-  const ref = useRef<T>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || reduced || coarse) return;
-    const xTo = gsap.quickTo(el, 'x', { duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-    const yTo = gsap.quickTo(el, 'y', { duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-    const move = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      xTo((e.clientX - (r.left + r.width / 2)) * strength);
-      yTo((e.clientY - (r.top + r.height / 2)) * strength);
-    };
-    const leave = () => {
-      xTo(0);
-      yTo(0);
-    };
-    el.addEventListener('pointermove', move);
-    el.addEventListener('pointerleave', leave);
-    return () => {
-      el.removeEventListener('pointermove', move);
-      el.removeEventListener('pointerleave', leave);
-    };
-  }, [strength]);
-  return ref;
-}
-
-export function Magnetic({
-  children,
-  strength,
-  className = '',
-}: {
-  children: ReactNode;
-  strength?: number;
-  className?: string;
-}) {
-  const ref = useMagnetic<HTMLSpanElement>(strength);
+/** "What I took from it": the key phrase gets a blue highlighter sweep once the list is in view. */
+export function Lessons({ items, className = '' }: { items: Lesson[]; className?: string }) {
   return (
-    <span ref={ref} className={`magnetic ${className}`}>
-      {children}
+    <ul className={`lessons ${className}`}>
+      {items.map((l, i) => (
+        <li key={i} style={{ '--i': i } as React.CSSProperties}>
+          <mark className="hl">{l.key}</mark>
+          {l.rest ? ` ${l.rest}` : ''}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function LogoBadge({ logo, name, size = 'md' }: { logo: Logo | null; name: string; size?: 'sm' | 'md' | 'lg' }) {
+  if (!logo)
+    return (
+      <span className={`logo-badge logo-${size} logo-name`} role="img" aria-label={name}>
+        {name}
+      </span>
+    );
+  return (
+    <span className={`logo-badge logo-${size} ${logo.dark ? 'is-dark' : ''}`}>
+      <img src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} loading="lazy" decoding="async" />
     </span>
   );
 }
 
 /**
- * Section transition: a line of glyph noise that decodes into an agent-trace
- * log entry as it scrolls into view, while a rule draws across the page.
+ * A stop where the path leaves the left rail, passes through the centre of
+ * `children` (which must carry `data-path="center"`), and returns to the rail.
+ * The vertical gaps give the swoops room so the line never crosses text.
  */
-export function TraceRule({ from, to, payload }: { from: string; to: string; payload: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
-  const final = `edge(${from} → ${to})  ${payload}`;
-  useEffect(() => {
-    const el = ref.current;
-    const t = textRef.current;
-    if (!el || !t) return;
-    if (reduced) {
-      t.textContent = final;
-      return;
-    }
-    t.textContent = final.replace(/[^\s]/g, '·');
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el.querySelector('.trace-line'),
-        { scaleX: 0 },
-        { scaleX: 1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 95%', end: 'top 45%', scrub: true } },
-      );
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 80%',
-        once: true,
-        onEnter: () => scrambleTo(t, final, 1.2),
-      });
-    }, el);
-    return () => ctx.revert();
-  }, [final]);
+export function Station({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className="trace" ref={ref} aria-hidden="true">
-      <span className="trace-dot" />
-      <span className="trace-line" />
-      <span className="trace-text" ref={textRef} />
+    <div className={`station ${className}`}>
+      <span data-path="rail" className="path-anchor" aria-hidden="true" />
+      <div className="station-body">{children}</div>
+      <span data-path="rail" className="path-anchor" aria-hidden="true" />
     </div>
   );
 }
 
-/** Small mono label, used as "machine voice" throughout. */
-export function Kicker({ children, index }: { children: ReactNode; index?: string }) {
+/**
+ * A milestone on the path: the logo arrives (scales up into the centre), holds,
+ * then eases back as the chapter takes over. Scrubbed with scroll.
+ */
+export function Milestone({
+  logo,
+  name,
+  when,
+  label,
+}: {
+  logo: Logo | null;
+  name: string;
+  when: string;
+  label: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || reduced) return;
+    const badge = el.querySelector('.logo-badge');
+    const ring = el.querySelector('.milestone-ring');
+    const ctx = gsap.context(() => {
+      gsap
+        .timeline({ scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom 15%', scrub: 0.6 } })
+        .fromTo(badge, { scale: 0.45, autoAlpha: 0, rotate: -8 }, { scale: 1, autoAlpha: 1, rotate: 0, ease: 'back.out(1.6)', duration: 1 })
+        .fromTo(ring, { scale: 0.6, autoAlpha: 0 }, { scale: 1.35, autoAlpha: 0.9, duration: 0.6 }, 0.55)
+        .to(ring, { scale: 1.8, autoAlpha: 0, duration: 0.6 })
+        .to(badge, { scale: 0.86, y: -16, duration: 0.8 }, '>-0.1');
+    }, el);
+    return () => ctx.revert();
+  }, []);
   return (
-    <p className="kicker">
-      {index ? <span className="kicker-index">{index}</span> : null}
-      {children}
-    </p>
+    <Station>
+      <div className="milestone" ref={ref}>
+        <span className="milestone-ring" aria-hidden="true" />
+        <span className="milestone-badge" data-path="center" data-path-hole="">
+          <LogoBadge logo={logo} name={name} size="lg" />
+        </span>
+        <p className="milestone-meta rv" data-path-hole="">
+          <span className="milestone-when">{when}</span>
+          <span>{label}</span>
+        </p>
+      </div>
+    </Station>
   );
 }
 
-export function Badge({ kind }: { kind: 'production' | 'development' }) {
+/** A circular stamp with text running around it. It turns slowly and stamps in once. */
+export function Seal({ text, children, className = '' }: { text: string; children: ReactNode; className?: string }) {
+  const id = useId().replace(/:/g, '');
   return (
-    <span className={`badge badge-${kind}`}>
-      <span className="badge-dot" />
-      {kind === 'production' ? 'In production' : 'In development'}
+    <div className={`seal ${className}`} data-path="center" data-path-hole="round">
+      <svg className="seal-ring" viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <path id={`seal-${id}`} d="M100,100 m-80,0 a80,80 0 1,1 160,0 a80,80 0 1,1 -160,0" />
+        </defs>
+        <text>
+          <textPath href={`#seal-${id}`}>{text}</textPath>
+        </text>
+      </svg>
+      <span className="seal-core">{children}</span>
+      <span className="seal-burst" aria-hidden="true" />
+    </div>
+  );
+}
+
+/** Counts to `to` (from `from`) with an expo ease the first time it's seen, then pops. */
+export function Counter({ to, from = 0, duration = 1800 }: { to: number; from?: number; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = ref.current!;
+    if (reduced) return;
+    el.textContent = String(from);
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        const t0 = performance.now();
+        const step = (now: number) => {
+          const t = Math.min(1, (now - t0) / duration);
+          const k = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+          el.textContent = String(Math.round(from + (to - from) * k));
+          if (t < 1) requestAnimationFrame(step);
+          else el.parentElement?.classList.add('popped');
+        };
+        requestAnimationFrame(step);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [to, from, duration]);
+  return <span ref={ref}>{to}</span>;
+}
+
+export function Status({ kind, children }: { kind: 'live' | 'dev'; children: ReactNode }) {
+  return (
+    <span className={`status status-${kind}`}>
+      <span className="status-dot" aria-hidden="true" />
+      {children}
     </span>
   );
 }

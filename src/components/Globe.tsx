@@ -96,13 +96,13 @@ export default function Globe({ progress }: { progress: React.MutableRefObject<n
       ctx.clearRect(0, 0, W, W);
       // atmosphere
       const g = ctx.createRadialGradient(W / 2, W / 2, R * 0.85, W / 2, W / 2, R * 1.25);
-      g.addColorStop(0, 'rgba(255,106,43,0.10)');
-      g.addColorStop(1, 'rgba(255,106,43,0)');
+      g.addColorStop(0, 'rgba(127,178,255,0.16)');
+      g.addColorStop(1, 'rgba(127,178,255,0)');
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, W);
       ctx.beginPath();
       ctx.arc(W / 2, W / 2, R, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(242,237,230,0.08)';
+      ctx.strokeStyle = 'rgba(169,189,230,0.16)';
       ctx.lineWidth = W / 700;
       ctx.stroke();
 
@@ -110,7 +110,7 @@ export default function Globe({ progress }: { progress: React.MutableRefObject<n
       for (let i = 0; i < n; i++) {
         const [px, py, z] = project(vecs[i * 3], vecs[i * 3 + 1], vecs[i * 3 + 2]);
         if (z < 0) continue;
-        ctx.fillStyle = `rgba(242,237,230,${(0.12 + z * 0.55).toFixed(3)})`;
+        ctx.fillStyle = `rgba(169,199,255,${(0.14 + z * 0.6).toFixed(3)})`;
         ctx.fillRect(px - ds / 2, py - ds / 2, ds, ds);
       }
 
@@ -118,12 +118,12 @@ export default function Globe({ progress }: { progress: React.MutableRefObject<n
       const p = progress.current;
       const [hx, hy, hz] = project(...home);
       if (hz > 0) {
-        ctx.fillStyle = '#ff6a2b';
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         ctx.arc(hx, hy, W / 160, 0, Math.PI * 2);
         ctx.fill();
         const pulse = (performance.now() / 1400) % 1;
-        ctx.strokeStyle = `rgba(255,106,43,${1 - pulse})`;
+        ctx.strokeStyle = `rgba(255,255,255,${1 - pulse})`;
         ctx.lineWidth = W / 500;
         ctx.beginPath();
         ctx.arc(hx, hy, W / 160 + pulse * W / 30, 0, Math.PI * 2);
@@ -139,7 +139,7 @@ export default function Globe({ progress }: { progress: React.MutableRefObject<n
           const [x0, y0, z0] = project(...arc[k - 1]);
           const [x1, y1, z1] = project(...arc[k]);
           if (z0 < -0.15 || z1 < -0.15) continue;
-          ctx.strokeStyle = `rgba(255,${130 + ((k * 2) | 0)},${60 + k},${(0.35 + 0.6 * (k / upto)).toFixed(3)})`;
+          ctx.strokeStyle = `rgba(${127 + ((k * 2.6) | 0)},${178 + k},255,${(0.4 + 0.6 * (k / upto)).toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(x0, y0);
           ctx.lineTo(x1, y1);
@@ -147,13 +147,13 @@ export default function Globe({ progress }: { progress: React.MutableRefObject<n
         }
         const [tx, ty, tz] = project(...arc[upto]);
         if (tz > -0.15) {
-          ctx.fillStyle = local >= 1 ? '#f2ede6' : '#ffb27a';
+          ctx.fillStyle = local >= 1 ? '#ffffff' : '#7fb2ff';
           ctx.beginPath();
           ctx.arc(tx, ty, W / (local >= 1 ? 220 : 180), 0, Math.PI * 2);
           ctx.fill();
           if (local >= 1) {
             const q = ((performance.now() / 1800 + a * 0.13) % 1);
-            ctx.strokeStyle = `rgba(242,237,230,${0.6 * (1 - q)})`;
+            ctx.strokeStyle = `rgba(127,178,255,${0.7 * (1 - q)})`;
             ctx.lineWidth = W / 700;
             ctx.beginPath();
             ctx.arc(tx, ty, W / 220 + q * W / 50, 0, Math.PI * 2);

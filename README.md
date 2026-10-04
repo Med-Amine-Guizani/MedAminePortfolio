@@ -1,23 +1,29 @@
-# Amine Guizani · Portfolio
+# Amine Guizani · Portfolio, "The Path"
 
-A scroll-driven, motion-heavy portfolio for a Full-Stack AI Engineer. Vite + React + TypeScript, GSAP ScrollTrigger, Lenis, canvas 2D and Matter.js.
+A phone-first, scroll-driven story in blue and white: from the baccalaureate and prepa to software in production at AVOCarbon. Vite + React + TypeScript, GSAP ScrollTrigger, Lenis (desktop only) and a canvas "path" that draws itself through the page.
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
 npm run build      # static output in dist/, served from /MedAminePortfolio/
-npm run preview
+npm run preview    # builds, then serves dist/ like GitHub Pages at http://localhost:4174/MedAminePortfolio/
 ```
+
+On Windows PowerShell, use `npm.cmd` if scripts are blocked by the execution policy.
 
 ## Where things live
 
 | Path | What |
 | --- | --- |
-| `src/data/profile.ts` | Every claim on the site. Facts come from `Resume/my_experiences.md`, so edit here first. |
-| `src/lib/motion.ts` | Motion tokens, Lenis + GSAP setup, velocity skew, scramble text. |
-| `src/components/` | One file per chapter, plus visuals (`JourneyVisuals`, `ProductionVisuals`, `Globe`, `PortraitParticles`). |
-| `scripts/` | `gen:globe` (land dots), `gen:images` (portrait variants), `gen-og.mjs` (share card), `shots` (screenshot QA). |
+| `src/data/profile.ts` | Every claim and line of copy. Facts come from `Resume/my_experiences.md` plus what Amine confirmed; edit here first. |
+| `src/components/Hero.tsx` | The opening frame. CSS-only intro, ships in the entry bundle. |
+| `src/Story.tsx` | Lazily loaded chunk that mounts the chapters in order, then the path and the floating "Let's talk" pill. |
+| `src/components/Path.tsx` | The blue line: anchors are `data-path` elements, holes are `data-path-hole` elements and pinned scenes. |
+| `src/components/*` | One file per chapter (`Origins`, `School`, `Internships`, `Avocarbon`, `Ending`) plus shared `ui.tsx`. |
+| `src/lib/motion.ts` | GSAP/ScrollTrigger/Lenis setup and motion tokens. |
+| `public/logos/` | Official logos. BS Automation has none yet; drop `bs-automation.svg` here and set it in `profile.ts`. |
+| `scripts/` | `gen:images` (portrait variants), `gen-og.mjs` (share card), `gen:globe` (land dots), `shots.mjs` + `montage.mjs` (screenshot QA), `serve-dist.mjs`. |
 
 ## Deploy
 
-Push to `main` on the `MedAminePortfolio` GitHub repo with Pages set to **GitHub Actions**. `.github/workflows/deploy.yml` builds and publishes `dist/`.
+Push to `main`. With **Settings → Pages → Source = GitHub Actions**, `.github/workflows/deploy.yml` builds and publishes `dist/`.

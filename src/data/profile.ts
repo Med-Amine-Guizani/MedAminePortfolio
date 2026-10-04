@@ -1,158 +1,188 @@
 // Single source of truth for every claim on the site.
-// Facts come from Resume/my_experiences.md — do not add anything unverified.
+// Facts come from Resume/my_experiences.md plus what Amine told us directly on 2026-10-04
+// (bac honour, entrance-exam rank, what each step taught him, how he works at AVOCarbon).
+// Never add numbers, names or outcomes that aren't verified there.
+
+const BASE = import.meta.env.BASE_URL;
 
 export const person = {
   fullName: 'Mohamed Amine Guizani',
-  shortName: 'Amine Guizani',
-  title: 'Full-Stack AI Engineer',
+  first: 'Amine',
+  last: 'Guizani',
+  role: 'Full-Stack & AI Engineer',
+  company: 'AVOCarbon Group',
   location: 'Tunis, Tunisia',
   email: 'amineguizani33@gmail.com',
   phone: '(+216) 95 954 110',
   phoneHref: 'tel:+21695954110',
   linkedin: 'https://www.linkedin.com/in/mohamed-amine-guizani/',
   github: 'https://github.com/Med-Amine-Guizani',
-  current: 'Full-Stack & AI Engineer @ AVOCarbon',
   languages: [
     ['Arabic', 'native'],
-    ['English', 'advanced · TOEIC 915/990'],
+    ['English', 'advanced, TOEIC 915/990'],
     ['French', 'upper-intermediate'],
     ['German', 'A2'],
   ] as const,
 };
 
-export const chapters = [
-  { id: 'hero', label: 'Signal' },
-  { id: 'origin', label: 'Origin' },
-  { id: 'journey', label: 'Journey' },
-  { id: 'retrieval', label: 'Retrieval' },
-  { id: 'production', label: 'Production' },
-  { id: 'lab', label: 'Lab' },
-  { id: 'stack', label: 'Toolbelt' },
-  { id: 'contact', label: 'Next' },
-] as const;
+export type Logo = { src: string; alt: string; dark?: boolean; width: number; height: number };
 
-export type Stint = {
-  id: string;
-  company: string;
-  role: string;
-  when: string;
-  where: string;
-  blurb: string;
-  points: string[];
-  tags: string[];
-  metrics?: { value: number; suffix: string; label: string }[];
+/** `dark` logos are published only in white, so they sit on a navy badge. */
+export const logos: Record<string, Logo | null> = {
+  ipein: { src: `${BASE}logos/ipein.webp`, alt: 'IPEIN, Preparatory Engineering Institute of Nabeul', width: 302, height: 150 },
+  enicarthage: { src: `${BASE}logos/enicarthage.webp`, alt: 'ENICarthage, National School of Engineering of Carthage', dark: true, width: 273, height: 108 },
+  // No verified official BS Automation logo yet: a plain name label is shown until Amine provides it.
+  bs: null,
+  capgemini: { src: `${BASE}logos/capgemini.svg`, alt: 'Capgemini Engineering', width: 708, height: 85 },
+  cognira: { src: `${BASE}logos/cognira.svg`, alt: 'Cognira', width: 210, height: 30 },
+  avocarbon: { src: `${BASE}logos/avocarbon.webp`, alt: 'AVOCarbon Group', width: 640, height: 118 },
 };
 
-export const journey: Stint[] = [
+/** A lesson: the key phrase gets the highlighter sweep, the rest follows it. */
+export type Lesson = { key: string; rest: string };
+
+export const prepa = {
+  when: '2021 — 2023',
+  school: 'IPEIN, Preparatory Engineering Institute of Nabeul',
+  track: 'Physics & Technology',
+  lessons: [
+    {
+      key: 'Problem solving, every single day.',
+      rest: 'Maths and physics taught me to break a hard problem down, model it, and not let go until it gives in.',
+    },
+    { key: 'I still work that way.', rest: '' },
+  ] satisfies Lesson[],
+  rank: { value: 100, of: 800 },
+};
+
+export const enicarthage = {
+  when: '2023 — 2026',
+  school: 'ENICarthage, National School of Engineering of Carthage',
+  degree: 'National engineering degree in Software Engineering',
+  graduated: 'July 2026',
+  lessons: [
+    {
+      key: 'Computer science from the ground up:',
+      rest: 'algorithms, systems, databases, networks and software architecture.',
+    },
+    {
+      key: 'The people.',
+      rest: 'Through networking I met many interesting people, classmates and professors, and learned a lot from them.',
+    },
+  ] satisfies Lesson[],
+};
+
+export type Internship = {
+  id: 'bs' | 'capgemini' | 'cognira';
+  company: string;
+  when: string;
+  kind: string;
+  title: [string, string]; // plain, emphasised
+  lessons: Lesson[];
+  note?: string;
+};
+
+export const internships: Internship[] = [
   {
-    id: 'bs-automation',
+    id: 'bs',
     company: 'BS Automation',
-    role: 'Software Engineering Intern',
     when: 'Jul — Aug 2024',
-    where: 'Tunisia',
-    blurb: 'Making collaborative robots easy to set up on a factory floor.',
-    points: [
-      'C++ features for a cobot installation & setup platform',
-      'Angular interfaces for multi-step low-code workflows',
-      'Clarified specs and acceptance criteria with a German client',
+    kind: 'Internship',
+    title: ['My first client,', 'and my first robots.'],
+    lessons: [
+      { key: 'Dealing with clients.', rest: 'Working with a German client taught me to find out what people really need, and agree on what "done" means.' },
+      { key: 'Robotics.', rest: 'C++ and Angular for a platform that makes collaborative robots easier to set up in factories.' },
+      { key: 'The startup pace.', rest: 'A small team, real ownership, moving fast.' },
+      { key: 'Scrum in practice.', rest: 'Dailies, sprint planning, delivering in increments.' },
     ],
-    tags: ['C++', 'Angular', 'Low-code', 'Scrum'],
   },
   {
     id: 'capgemini',
     company: 'Capgemini Engineering',
-    role: 'Software Engineering Intern',
     when: 'Jun — Aug 2025',
-    where: 'Tunis',
-    blurb: 'An entire internship lifecycle, from inbox to archive, in one platform.',
-    points: [
-      'Email intake pipeline feeding a Kanban board for HR',
-      'LLM pipeline that reads each application and scores fit as structured JSON',
-      'Semantic vector search to catch duplicate projects',
-      'Spring Boot + Spring Security (JWT, RBAC) and an Angular front',
+    kind: 'Internship',
+    title: ['My first project,', 'end to end.'],
+    lessons: [
+      {
+        key: 'Owning it from start to finish.',
+        rest: 'A platform that automates the whole internship journey, from applications arriving by email to archiving the finished project.',
+      },
+      {
+        key: 'My first AI features, built for better UX.',
+        rest: 'An LLM reads each application and scores the fit, and semantic search finds similar past projects. Not AI for show: it saved HR real effort.',
+      },
     ],
-    tags: ['Spring Boot', 'Angular', 'LLM scoring', 'Vector search'],
   },
   {
     id: 'cognira',
     company: 'Cognira',
-    role: 'Software Engineering Intern · Final-year project',
     when: 'Feb — Jun 2026',
-    where: 'Tunis R&D · Atlanta-based AI retail startup',
-    blurb: 'Configuration Studio for PromoAI: GitOps file editing became four clicks.',
-    points: [
-      'Low-code configuration platform with a propagation engine and deviation detection',
-      'Conversational agent (RAG + tool calling) in NestJS, operating on live configuration JSON',
-      'Patch-based sync between the agent and the UI, human kept in the loop',
-      'Redis sessions for concurrent multi-user workflows',
+    kind: 'Final-year project',
+    title: ['How a real', 'product company works.'],
+    lessons: [
+      { key: 'Inside a SaaS company:', rest: 'how Cognira builds, ships and supports PromoAI for retailers.' },
+      { key: 'Deep JavaScript and TypeScript.', rest: '' },
+      { key: 'A team I learned so much from.', rest: 'Very competent, genuinely kind people.' },
+      { key: 'Building with AI.', rest: 'Tools like Claude Code became part of how I work.' },
     ],
-    tags: ['React', 'Redux Toolkit', 'NestJS', 'RAG', 'Tool calling', 'Redis'],
-    metrics: [
-      { value: 60, suffix: '%', label: 'faster delivery of client enhancement requests' },
-      { value: 20, suffix: '%', label: 'fewer re-renders on large configuration trees' },
-    ],
-  },
-  {
-    id: 'auveillese',
-    company: 'Auveillese',
-    role: 'Freelance Full-Stack Developer',
-    when: 'Jun — Jul 2026',
-    where: 'Portugal · remote',
-    blurb: 'Hotel platforms covering everything from reservations to energy consumption.',
-    points: ['NestJS backend tasks', 'React interfaces for hotel operations and energy monitoring'],
-    tags: ['NestJS', 'React', 'JavaScript'],
+    note: 'I built Configuration Studio, a low-code platform with an AI assistant (RAG + tool calling) that keeps the human in charge.',
   },
 ];
 
+export const cogniraMetrics = [
+  { value: 60, suffix: '%', label: 'faster delivery of client enhancement requests' },
+  { value: 20, suffix: '%', label: 'fewer re-renders on large configuration trees' },
+];
+
 export const avocarbon = {
-  company: 'AVOCarbon Group',
-  role: 'Full-Stack & AI Engineer',
   since: 'August 2026',
-  derogation: {
-    name: 'Derogation Management Platform',
-    status: 'production' as const,
-    summary:
-      'A request and approval platform with four roles, a two-level approval workflow, configurable notifications and per-plant responsibility matrices.',
-    stack: ['Python', 'FastAPI', 'SQLAlchemy', 'Alembic', 'React'],
-  },
-  agent: {
-    name: 'Role-Based Intelligence Agent',
-    status: 'development' as const,
-    summary:
-      'A LangGraph agent that correlates weekly operational data from several internal systems and reasons about what changed, what is stagnating, what is blocked, and which risk or opportunity is emerging. It then writes a memo for each role, and access control decides what each reader may see.',
-    stack: ['Python', 'LangGraph', 'Agent orchestration', 'RBAC'],
+  role: 'Full-Stack & AI Engineer',
+  platform: 'The Derogation Management Platform',
+  loop: [
+    {
+      step: 'Listen',
+      text: 'I talked with the people who handle derogations to get the features right: the real flows, and where they hurt.',
+    },
+    { step: 'Build with AI', text: 'I used AI to build and ship the solution fast.' },
+    { step: 'Deploy', text: "Deployed efficiently into production, now used across AVOCarbon's plants." },
+    {
+      step: 'Watch & fix',
+      text: "I keep watching how people use it. When something breaks, I usually see it in the logs and fix it before anyone reports it.",
+    },
+  ],
+  facts: ['4 roles', '2-level approval workflow', 'Configurable notifications', 'Per-plant responsibility matrices'],
+  stack: ['Python', 'FastAPI', 'SQLAlchemy', 'Alembic', 'React'],
+  next: {
+    title: 'A role-based intelligence agent',
+    text: 'A LangGraph agent that turns weekly operational data into a memo for each role, with access control deciding who sees what.',
   },
 };
 
-export const lab = [
+export const projects = [
   {
-    id: 'watchwise',
     name: 'WatchWise',
-    kind: 'Personal · full-stack',
-    summary:
-      'A MERN movie platform with JWT auth, cached TMDB data, and a customized Recombee engine that personalizes recommendations from ratings and interaction history.',
-    stack: ['MongoDB', 'Express', 'React', 'Node.js', 'Recombee'],
+    kind: 'Personal project',
+    text: 'A movie platform with personalised recommendations from a customised Recombee engine.',
+    stack: ['MongoDB', 'Express', 'React', 'Node.js'],
     links: [
       { label: 'Live demo', href: 'https://watch-wise-pink.vercel.app/' },
       { label: 'GitHub', href: 'https://github.com/Med-Amine-Guizani/WatchWise' },
     ],
   },
   {
-    id: 'smart-city',
     name: 'Smart City Shield',
-    kind: 'Academic · distributed systems',
-    summary:
-      'Crime detection for a fictional smart city: Java and Spring Cloud microservices that talk over REST, GraphQL, SOAP and gRPC, behind an API gateway with service discovery and centralized configuration.',
-    stack: ['Java', 'Spring Cloud', 'gRPC', 'GraphQL', 'SOAP', 'Docker'],
+    kind: 'Academic project',
+    text: 'Crime detection for a fictional smart city: Spring Cloud microservices talking REST, GraphQL, SOAP and gRPC.',
+    stack: ['Java', 'Spring Cloud', 'gRPC', 'Docker'],
     links: [],
   },
 ];
 
-export const stack: Record<string, string[]> = {
-  AI: ['LangGraph', 'Agent orchestration', 'RAG', 'Tool calling', 'Conversational agents', 'LLM scoring', 'Vector search'],
+export const toolbox: Record<string, string[]> = {
+  AI: ['LangGraph', 'Agent orchestration', 'RAG', 'Tool calling', 'LLM scoring', 'Semantic search'],
   Languages: ['Python', 'TypeScript', 'JavaScript', 'Java', 'C', 'C++'],
-  Frontend: ['React', 'Redux Toolkit', 'Angular'],
-  Backend: ['FastAPI', 'NestJS', 'Node.js', 'Express', 'Spring Boot', 'Spring Security'],
-  Data: ['PostgreSQL', 'SQLAlchemy', 'Alembic', 'Oracle PL/SQL', 'MySQL', 'MongoDB', 'Redis'],
-  Ops: ['Docker', 'Compose', 'Kubernetes', 'CI/CD', 'GitHub Actions', 'Linux'],
+  'Front end': ['React', 'Redux Toolkit', 'Angular'],
+  'Back end': ['FastAPI', 'NestJS', 'Node.js', 'Express', 'Spring Boot'],
+  Data: ['PostgreSQL', 'SQLAlchemy', 'Alembic', 'MySQL', 'MongoDB', 'Redis', 'Oracle'],
+  Ops: ['Docker', 'Kubernetes', 'CI/CD', 'GitHub Actions', 'Linux'],
 };

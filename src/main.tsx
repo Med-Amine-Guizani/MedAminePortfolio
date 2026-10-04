@@ -1,21 +1,11 @@
 import { createRoot } from 'react-dom/client';
+import '@fontsource/instrument-serif/latin-400.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
+import '@fontsource-variable/manrope/wght.css';
+import '@fontsource/caveat/latin-500.css';
 import App from './App';
 import './styles/tokens.css';
-import './styles/global.css';
-import './styles/sections.css';
+import './styles/base.css';
+import './styles/story.css';
 
 createRoot(document.getElementById('root')!).render(<App />);
-
-// For the engineers who open DevTools.
-console.log(
-  `%c
-   ┌─────────────────────────────────────────────┐
-   │   agent://amine-guizani                     │
-   │   status: shipping · env: production        │
-   └─────────────────────────────────────────────┘
-%c  You opened the console. We should probably talk.
-  → amineguizani33@gmail.com
-`,
-  'color:#ff6a2b;font-family:monospace',
-  'color:#f2ede6;font-family:monospace;font-size:12px',
-);

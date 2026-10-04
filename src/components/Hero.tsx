@@ -1,123 +1,97 @@
 import { useEffect, useRef } from 'react';
 import { person } from '../data/profile';
-import { gsap, reduced, scrambleTo, scrollState, scrollToId, ease } from '../lib/motion';
-import PortraitParticles from './PortraitParticles';
-import { Split, Magnetic } from './ui';
+import { goTo } from '../lib/nav';
 
-const ROLES = ['Full-Stack AI Engineer', 'LangGraph agent builder', 'RAG + tool calling', 'Shipping to production'];
+const BASE = import.meta.env.BASE_URL;
 
-export default function Hero({ booted }: { booted: boolean }) {
+/**
+ * The opening frame. Its intro runs on CSS alone (no GSAP) so it paints and
+ * animates before the rest of the story has even downloaded.
+ */
+export default function Hero() {
   const root = useRef<HTMLElement>(null);
-  const role = useRef<HTMLSpanElement>(null);
 
-  // Intro choreography: name rises, role decodes, details stagger in.
+  // Gentle scroll-out: the photo drifts up and the copy fades as the story begins.
   useEffect(() => {
-    if (!booted || reduced) return;
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: ease.outExpo } });
-      tl.from('.hero-name .ch', { yPercent: 120, rotate: 8, duration: 1.4, stagger: 0.045 })
-        .from('.hero-kicker', { opacity: 0, y: 12, duration: 0.8 }, 0.3)
-        .add(() => role.current && scrambleTo(role.current, ROLES[0], 1.1), 0.5)
-        .from('.hero-lede', { opacity: 0, y: 24, filter: 'blur(10px)', duration: 1.1 }, 0.7)
-        .from('.hero-actions > *', { opacity: 0, y: 20, duration: 0.9, stagger: 0.08 }, 0.85)
-        .from('.hero-cue', { opacity: 0, duration: 1 }, 1.2)
-        .from('.hero-grid-line', { scaleX: 0, duration: 1.6, stagger: 0.1, ease: ease.inOutQuint }, 0);
-    }, root);
-    return () => ctx.revert();
-  }, [booted]);
-
-  // Cycle the role line through a decode effect.
-  useEffect(() => {
-    if (!booted) return;
-    let i = 0;
-    const id = window.setInterval(() => {
-      i = (i + 1) % ROLES.length;
-      if (role.current) scrambleTo(role.current, ROLES[i], 0.9);
-    }, 3200);
-    return () => window.clearInterval(id);
-  }, [booted]);
-
-  // Kinetic type: the name thins and stretches with scroll velocity, and the whole block drifts out.
-  useEffect(() => {
-    if (reduced) return;
-    const name = root.current!.querySelector<HTMLElement>('.hero-name')!;
-    let w = 760;
-    const tick = () => {
-      const target = 760 - Math.min(520, Math.abs(scrollState.smooth) * 14);
-      w += (target - w) * 0.15;
-      name.style.fontWeight = String(Math.round(w));
+    const el = root.current!;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const photo = el.querySelector<HTMLElement>('.hero-photo')!;
+    const copy = el.querySelector<HTMLElement>('.hero-copy')!;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const p = Math.min(1, Math.max(0, window.scrollY / el.offsetHeight));
+      photo.style.transform = `translate3d(0, ${(-p * 60).toFixed(1)}px, 0) scale(${(1 - p * 0.12).toFixed(3)})`;
+      copy.style.opacity = String(1 - p * 1.1);
     };
-    gsap.ticker.add(tick);
-    const ctx = gsap.context(() => {
-      gsap.to('.hero-copy', {
-        yPercent: -18,
-        opacity: 0.2,
-        ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
-      });
-    }, root);
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
-      gsap.ticker.remove(tick);
-      ctx.revert();
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(raf);
     };
   }, []);
 
   return (
-    <section className="hero" id="hero" ref={root} aria-label="Introduction">
-      <div className="hero-grid" aria-hidden="true">
-        <span className="hero-grid-line" />
-        <span className="hero-grid-line" />
-        <span className="hero-grid-line" />
+    <header className="hero" id="top" ref={root}>
+      <div className="aurora" aria-hidden="true">
+        <span />
+        <span />
+        <span />
       </div>
 
-      <div className="hero-copy">
-        <p className="hero-kicker">
-          <span className="mono">Signal in. Production out.</span>
-          <span className="hero-kicker-sep" />
-          <span className="mono dim">Tunis · ENICarthage, Class of 2026</span>
-        </p>
+      <div className="hero-inner wrap">
+        <div className="hero-photo">
+          <span className="hero-disc" aria-hidden="true" />
+          <picture className="hero-pic">
+            <source srcSet={`${BASE}portrait-480.avif 480w, ${BASE}portrait-864.avif 864w`} type="image/avif" sizes="(min-width: 820px) 420px, 240px" />
+            <img
+              src={`${BASE}portrait-480.webp`}
+              srcSet={`${BASE}portrait-480.webp 480w, ${BASE}portrait-864.webp 864w`}
+              sizes="(min-width: 820px) 420px, 240px"
+              alt="Portrait of Mohamed Amine Guizani"
+              width={480}
+              height={480}
+              fetchPriority="high"
+            />
+          </picture>
+          <span className="hero-ring" aria-hidden="true" />
+        </div>
 
-        <h1 className="hero-name">
-          <Split text="Amine" className="hero-name-line" />
-          <Split text="Guizani" className="hero-name-line hero-name-outline" />
-        </h1>
-
-        <p className="hero-role mono" aria-live="off">
-          <span className="hero-role-prompt">&gt;</span>
-          <span ref={role}>{reduced ? ROLES[0] : ' '}</span>
-          <span className="caret" />
-        </p>
-        <span className="sr-only">{person.title}</span>
-
-        <p className="hero-lede">
-          I build AI that leaves the notebook and runs in production: <em>LangGraph agents</em>,{' '}
-          <em>RAG and tool calling</em>, and the full-stack platforms around them.
-        </p>
-
-        <div className="hero-actions">
-          <span className="status-pill">
-            <span className="status-dot" />
-            Currently: {person.current}
-          </span>
-          <Magnetic>
-            <button className="btn btn-ember" onClick={() => scrollToId('contact')} data-cursor="hello">
+        <div className="hero-copy">
+          <p className="hero-eyebrow">
+            <span className="live-dot" aria-hidden="true" />
+            {person.role} · {person.company}
+          </p>
+          <h1 className="hero-name">
+            <span className="line">
+              <span>{person.first}</span>
+            </span>
+            <span className="line">
+              <em>{person.last}</em>
+            </span>
+          </h1>
+          <p className="hero-tagline">I build software people actually use, and AI helps me ship it faster.</p>
+          <p className="hero-small">
+            ENICarthage, Class of 2026. Today, my work runs in AVOCarbon's plants around the world.
+          </p>
+          <div className="hero-actions">
+            <button className="btn btn-primary" onClick={() => goTo('contact')}>
               Get in touch
             </button>
-          </Magnetic>
+            <a className="btn btn-ghost" href={person.linkedin} target="_blank" rel="noreferrer">
+              LinkedIn <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div className="hero-visual">
-        <PortraitParticles
-          start={booted}
-          alt="Portrait of Mohamed Amine Guizani, assembled from particles"
-        />
+      <div className="hero-cue" data-path="start">
+        <span>Follow the path</span>
+        <span className="hero-cue-dot" aria-hidden="true" />
       </div>
-
-      <div className="hero-cue mono" aria-hidden="true">
-        <span>scroll to execute</span>
-        <span className="hero-cue-line" />
-      </div>
-    </section>
+    </header>
   );
 }
