@@ -1,0 +1,34 @@
+{
+  "name": "amine-guizani-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "npm run build && node scripts/serve-dist.mjs 4174",
+    "gen:globe": "node scripts/gen-globe.mjs",
+    "gen:images": "node scripts/gen-images.mjs",
+    "shots": "node scripts/shots.mjs"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.0",
+    "matter-js": "^0.20.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/matter-js": "^0.19.8",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "d3-geo": "^3.1.1",
+    "puppeteer-core": "^24.0.0",
+    "sharp": "^0.34.0",
+    "topojson-client": "^3.1.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.0.0",
+    "world-atlas": "^2.0.2"
+  }
+}

@@ -1,0 +1,57 @@
+/* Metric-matched fallbacks (measured against Arial in Chrome) so the web-font swap doesn't shift layout. */
+@font-face {
+  font-family: 'Geist Fallback';
+  src: local('Arial');
+  size-adjust: 101.9%;
+  ascent-override: 99%;
+  descent-override: 29%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Bricolage Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Arial');
+  font-weight: 700 800;
+  size-adjust: 90.3%;
+  ascent-override: 103%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
+
+:root {
+  /* Color */
+  --bg: #0b0a0c;
+  --bg-2: #111014;
+  --surface: #16151a;
+  --surface-2: #1d1c22;
+  --line: rgba(242, 237, 230, 0.1);
+  --line-strong: rgba(242, 237, 230, 0.22);
+  --text: #f2ede6;
+  --muted: #9a948c;
+  --dim: #8a847c;
+  --ember: #ff6a2b;
+  --ember-soft: rgba(255, 106, 43, 0.14);
+  --ember-glow: rgba(255, 106, 43, 0.55);
+  --prod: #3ee08f;
+  --prod-soft: rgba(62, 224, 143, 0.14);
+  --dev: #ffb224;
+  --dev-soft: rgba(255, 178, 36, 0.14);
+
+  /* Type */
+  --f-display: 'Bricolage Grotesque', 'Bricolage Fallback', system-ui, sans-serif;
+  --f-text: 'Geist', 'Geist Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'Geist Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-micro: 150ms;
+  --t-ui: 300ms;
+  --t-reveal: 800ms;
+  --t-cinematic: 1400ms;
+
+  /* Layout */
+  --gutter: clamp(16px, 4vw, 64px);
+  --spine-x: clamp(16px, 2.4vw, 36px);
+  --radius: 18px;
+}
