@@ -95,6 +95,14 @@ export function LogoBadge({ logo, name, size = 'md' }: { logo: Logo | null; name
         {name}
       </span>
     );
+  // A symbol without a wordmark: the badge spells the name beside it.
+  if (logo.mark)
+    return (
+      <span className={`logo-badge logo-${size} logo-mark`}>
+        <img src={logo.src} alt="" width={logo.width} height={logo.height} loading="lazy" decoding="async" />
+        <span className="logo-mark-name">{name}</span>
+      </span>
+    );
   return (
     <span className={`logo-badge logo-${size} ${logo.dark ? 'is-dark' : ''}`}>
       <img src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} loading="lazy" decoding="async" />

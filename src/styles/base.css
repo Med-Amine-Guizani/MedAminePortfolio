@@ -171,6 +171,17 @@ main {
 .skip-link:focus {
   transform: none;
 }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* Buttons and links */
 .btn {
@@ -414,6 +425,29 @@ main {
 }
 .logo-lg.logo-name {
   font-size: 22px;
+}
+.logo-mark {
+  gap: 0.6em;
+}
+.logo-mark img {
+  flex: none;
+}
+.logo-mark-name {
+  max-width: 10.5ch; /* "Ben Salem / Automation" on two lines */
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-align: left;
+  color: var(--navy);
+}
+.logo-sm.logo-mark {
+  font-size: 12px;
+}
+.logo-md.logo-mark {
+  font-size: 13.5px;
+}
+.logo-lg.logo-mark {
+  font-size: 18px;
 }
 
 /* Milestone: a logo arriving on the path */
@@ -662,5 +696,126 @@ main {
   }
   .hl {
     background-size: 100% 100%;
+  }
+}
+
+/* Product films (AdVideo): a 16:9 slot reserved before anything loads */
+.film {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--navy-2);
+  box-shadow: 0 28px 56px -30px rgba(10, 26, 63, 0.6);
+}
+.film video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.film-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: inherit;
+}
+.film-hit:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: -3px;
+}
+.film-play,
+.film-flash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 12px 30px -10px rgba(10, 26, 63, 0.6);
+  pointer-events: none;
+}
+.film-play svg,
+.film-flash svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--blue);
+}
+.film-play svg {
+  margin-left: 3px;
+}
+.film-flash {
+  animation: film-flash 0.6s var(--ease-out) forwards;
+}
+@keyframes film-flash {
+  from {
+    opacity: 0.95;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+.film-sound {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(10, 26, 63, 0.66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--white);
+  cursor: pointer;
+}
+.film-sound:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 2px;
+}
+.film-sound svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+.film-sound-x,
+.film-sound-waves {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.film-figure {
+  margin: 8px 0 44px;
+  max-width: 880px;
+}
+.film-figure figcaption {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--slate);
+}
+.night .film-figure figcaption {
+  color: var(--on-night-soft);
+}
+@media (prefers-reduced-motion: reduce) {
+  .film-flash {
+    animation: none;
+    opacity: 0;
   }
 }

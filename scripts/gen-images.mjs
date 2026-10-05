@@ -10,4 +10,9 @@ for (const size of [480, 864]) {
 }
 // Favicon / touch icon.
 await sharp(src).resize(180).png().toFile(out('apple-touch-icon.png'));
+
+// Ben Salem Automation mark, as supplied by Amine (200x200 JPEG on white): trim the margin, keep native size.
+const bsSrc = new URL('../assets/ben-salem-automation-src.jpg', import.meta.url).pathname.replace(/^\/(\w:)/, '$1');
+const bs = await sharp(bsSrc).trim({ background: '#ffffff', threshold: 24 }).webp({ quality: 90 }).toFile(out('logos/ben-salem-automation.webp'));
+console.log(`ben-salem-automation.webp ${bs.width}x${bs.height}`);
 console.log('images done');

@@ -21,8 +21,9 @@ On Windows PowerShell, use `npm.cmd` if scripts are blocked by the execution pol
 | `src/components/Path.tsx` | The blue line: anchors are `data-path` elements, holes are `data-path-hole` elements and pinned scenes. |
 | `src/components/*` | One file per chapter (`Origins`, `School`, `Internships`, `Avocarbon`, `Ending`) plus shared `ui.tsx`. |
 | `src/lib/motion.ts` | GSAP/ScrollTrigger/Lenis setup and motion tokens. |
-| `public/logos/` | Official logos. BS Automation has none yet; drop `bs-automation.svg` here and set it in `profile.ts`. |
-| `scripts/` | `gen:images` (portrait variants), `gen-og.mjs` (share card), `gen:globe` (land dots), `shots.mjs` + `montage.mjs` (screenshot QA), `serve-dist.mjs`. |
+| `public/logos/` | Official logos. Ben Salem Automation's is a mark without a name, built by `gen:images` from `assets/ben-salem-automation-src.jpg`. |
+| `public/videos/` | Product films (AV1 + H.264 at 720p, WebP posters). Encode settings and VMAF scores are in its `README.md`. |
+| `scripts/` | `gen:images` (portrait variants, Ben Salem mark), `gen-og.mjs` (share card), `gen:globe` (land dots), `shots.mjs` + `montage.mjs` (screenshot QA), `serve-dist.mjs`. |
 
 ## Deploy
 

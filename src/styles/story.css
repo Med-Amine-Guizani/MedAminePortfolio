@@ -369,6 +369,21 @@
   transform-box: fill-box;
   transform-origin: center;
 }
+.nw-node.is-named {
+  fill: var(--blue);
+}
+/* 17 viewBox units ≈ 12 px when the graph is ~290 px wide on a 360 px phone. */
+.nw-name {
+  font-family: var(--f-sans);
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.005em;
+  fill: var(--navy);
+  paint-order: stroke;
+  stroke: var(--white);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
 .nw-me-core {
   fill: var(--blue);
 }
@@ -501,6 +516,8 @@
 }
 .card-visual {
   align-self: end;
+  display: grid;
+  gap: 12px;
 }
 .viz {
   position: relative;
@@ -1244,6 +1261,9 @@
   }
   .viz-robot svg {
     width: min(100%, 240px);
+  }
+  .nw-name {
+    font-size: 13px; /* the graph is up to 560 px wide here */
   }
   .loop {
     grid-template-columns: 0.9fr 1.1fr;

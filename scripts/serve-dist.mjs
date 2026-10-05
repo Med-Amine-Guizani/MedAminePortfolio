@@ -16,6 +16,7 @@ const types = {
   '.webp': 'image/webp',
   '.avif': 'image/avif',
   '.json': 'application/json',
+  '.mp4': 'video/mp4',
 };
 const port = Number(process.argv[2] ?? 4174);
 
@@ -34,7 +35,21 @@ createServer(async (req, res) => {
     // GitHub Pages gzips text assets; do the same so audits see realistic transfer sizes.
     if (/text|javascript|json|svg/.test(type) && /gzip/.test(req.headers['accept-encoding'] ?? '')) {
       res.writeHead(200, { 'Content-Type': type, 'Content-Encoding': 'gzip', 'Cache-Control': 'max-age=600' }).end(gzipSync(body));
-    } else res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'max-age=600' }).end(body);
+    } else if (/^bytes=\d*-\d*$/.test(req.headers.range ?? '')) {
+      // Range requests, like Pages: video elements (Safari above all) seek with them.
+      const [a, b] = req.headers.range.slice(6).split('-');
+      const start = a ? Number(a) : Math.max(0, body.length - Number(b));
+      const end = a && b ? Math.min(Number(b), body.length - 1) : body.length - 1;
+      res
+        .writeHead(206, {
+          'Content-Type': type,
+          'Content-Range': `bytes ${start}-${end}/${body.length}`,
+          'Content-Length': end - start + 1,
+          'Accept-Ranges': 'bytes',
+          'Cache-Control': 'max-age=600',
+        })
+        .end(body.subarray(start, end + 1));
+    } else res.writeHead(200, { 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Cache-Control': 'max-age=600' }).end(body);
   } catch {
     res.writeHead(404, { 'Content-Type': types['.html'] }).end(await readFile(join(root, '404.html')));
   }

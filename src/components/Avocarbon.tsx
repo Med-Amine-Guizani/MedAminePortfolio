@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { avocarbon, logos } from '../data/profile';
 import { gsap, isPhone, reduced } from '../lib/motion';
+import AdVideo from './AdVideo';
 import Globe from './Globe';
 import { Milestone, Status, Title, useReveal, Words } from './ui';
 
@@ -156,6 +157,10 @@ export default function Avocarbon() {
         <p className="kicker rv">
           {avocarbon.platform} <Status kind="live">Live in production</Status>
         </p>
+        <figure className="film-figure rv">
+          <AdVideo film={avocarbon.video} />
+          <figcaption>{avocarbon.video.caption}</figcaption>
+        </figure>
         <Title plain="How I work:" em="listen, build, ship, watch." className="title-l" />
         <Loop />
         <div className="facts rv">

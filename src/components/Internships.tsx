@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cogniraMetrics, internships, logos, type Internship } from '../data/profile';
 import { gsap, reduced, ScrollTrigger } from '../lib/motion';
+import AdVideo from './AdVideo';
 import { Counter, Lessons, LogoBadge, Station, Title, useReveal } from './ui';
 
 /** Builds a looping timeline that only plays while its element is on screen. */
@@ -25,7 +26,7 @@ function useLoop(build: (el: HTMLElement) => gsap.core.Timeline) {
   return ref;
 }
 
-/** BS Automation: a cobot arm runs its setup steps while a sprint loop closes around it. */
+/** Ben Salem Automation: a cobot arm runs its setup steps while a sprint loop closes around it. */
 function RobotSprint() {
   const ref = useLoop(() => {
     const tl = gsap.timeline({ repeat: -1, defaults: { ease: 'power3.inOut', duration: 1 } });
@@ -132,7 +133,8 @@ function Metrics() {
 
 const VISUALS = { bs: RobotSprint, capgemini: ShipFlow, cognira: Metrics };
 
-function Card({ s, i }: { s: Internship; i: number }) {
+/** `covered`: the next card has slid over this one, so its film pauses. */
+function Card({ s, i, covered }: { s: Internship; i: number; covered: boolean }) {
   const Visual = VISUALS[s.id];
   return (
     <article className={`card card-${s.id}`} style={{ '--i': i } as React.CSSProperties} aria-labelledby={`card-${s.id}`}>
@@ -151,7 +153,9 @@ function Card({ s, i }: { s: Internship; i: number }) {
           {s.note ? <p className="card-note">{s.note}</p> : null}
         </div>
         <div className="card-visual">
-          <Visual />
+          {s.video ? <AdVideo film={s.video} blocked={covered} /> : null}
+          {/* a film replaces the illustration, but Cognira's verified metrics stay beneath it */}
+          {!s.video || s.id === 'cognira' ? <Visual /> : null}
         </div>
         <span className="card-dim" aria-hidden="true" />
       </div>
@@ -161,6 +165,8 @@ function Card({ s, i }: { s: Internship; i: number }) {
 
 export default function Internships() {
   const ref = useRef<HTMLElement>(null);
+  const covered = useRef(internships.map(() => false));
+  const [coveredState, setCovered] = useState(covered.current);
   useReveal(ref);
 
   // Stacked cards: each one sticks, then sinks back and dims as the next slides over it.
@@ -182,7 +188,19 @@ export default function Internships() {
         gsap
           .timeline({
             // ends when the next card reaches its own sticky top
-            scrollTrigger: { trigger: next, start: 'top bottom', end: () => `top ${topOf(i + 1)}px`, scrub: true, invalidateOnRefresh: true },
+            scrollTrigger: {
+              trigger: next,
+              start: 'top bottom',
+              end: () => `top ${topOf(i + 1)}px`,
+              scrub: true,
+              invalidateOnRefresh: true,
+              // re-render only when the card crosses "covered", not on every scroll frame
+              onUpdate: ({ progress }) => {
+                if (progress > 0.4 === covered.current[i]) return;
+                covered.current = covered.current.map((c, k) => (k === i ? progress > 0.4 : c));
+                setCovered(covered.current);
+              },
+            },
           })
           .to(card.querySelector('.card-inner'), { scale: 0.9, y: -8, ease: 'none' }, 0)
           .to(card.querySelector('.card-dim'), { opacity: 0.55, ease: 'none' }, 0);
@@ -198,6 +216,8 @@ export default function Internships() {
       return () => {
         ScrollTrigger.removeEventListener('refreshInit', setTops);
         cards.forEach((c) => (c.style.top = ''));
+        covered.current = covered.current.map(() => false);
+        setCovered(covered.current);
       };
     });
     return () => mm.revert();
@@ -220,7 +240,7 @@ export default function Internships() {
         </Station>
         <div className="stack">
           {internships.map((s, i) => (
-            <Card s={s} i={i} key={s.id} />
+            <Card s={s} i={i} key={s.id} covered={coveredState[i]} />
           ))}
         </div>
         <span data-path="rail" className="path-anchor" aria-hidden="true" />

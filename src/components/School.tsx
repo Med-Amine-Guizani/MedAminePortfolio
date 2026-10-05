@@ -8,6 +8,12 @@ function rand(seed: number) {
   return x - Math.floor(x);
 }
 
+/**
+ * Nodes that carry `enicarthage.people`, in the same order. Picked from the seeded layout so the
+ * labels point outward, stay inside the viewBox and clear every other dot.
+ */
+const NAMED = [17, 9, 10, 13, 15];
+
 /** Abstract dots joining into a network as you scroll: the people met along the way. */
 function Network() {
   const ref = useRef<SVGSVGElement>(null);
@@ -68,6 +74,10 @@ function Network() {
       tl.from('.nw-me', { scale: 0, transformOrigin: '200px 150px', duration: 0.3, ease: 'back.out(3)' })
         .from('.nw-node', { scale: 0, stagger: 0.03, duration: 0.25 }, 0.1)
         .fromTo('.nw-edge', { strokeDashoffset: 1 }, { strokeDashoffset: 0, stagger: 0.025, duration: 0.3 }, 0.15);
+      // each name rises in just after its node pops (node j pops at 0.1 + 0.03 * (j - 1))
+      gsap.utils.toArray<SVGTextElement>('.nw-name').forEach((t) => {
+        tl.from(t, { autoAlpha: 0, y: 6, duration: 0.2 }, 0.28 + 0.03 * (Number(t.dataset.node) - 1));
+      });
     }, el);
     return () => ctx.revert();
   }, []);
@@ -86,9 +96,19 @@ function Network() {
           strokeDasharray="1"
         />
       ))}
-      {nodes.slice(1).map((n, i) => (
-        <circle key={i} className="nw-node" cx={n.x} cy={n.y} r={n.r} />
-      ))}
+      {nodes.slice(1).map((n, i) => {
+        const named = NAMED.includes(i + 1);
+        return <circle key={i} className={`nw-node ${named ? 'is-named' : ''}`} cx={n.x} cy={n.y} r={named ? Math.max(n.r, 6.5) : n.r} />;
+      })}
+      {NAMED.map((j, k) => {
+        const n = nodes[j];
+        const right = n.x >= 200; // labels point away from the centre
+        return (
+          <text key={j} className="nw-name" data-node={j} x={right ? n.x + 11 : n.x - 11} y={n.y + 5.5} textAnchor={right ? 'start' : 'end'}>
+            {enicarthage.people[k]}
+          </text>
+        );
+      })}
       <g className="nw-me">
         <circle cx="200" cy="150" r="22" className="nw-me-halo" />
         <circle cx="200" cy="150" r="10" className="nw-me-core" />
@@ -108,7 +128,10 @@ export default function School() {
         <Lessons items={enicarthage.lessons} className="lessons-xl" />
         <figure className="network-wrap rv">
           <Network />
-          <figcaption>Every dot is someone I learned something from.</figcaption>
+          <figcaption>
+            Every dot is someone I learned something from.
+            <span className="sr-only"> Among them: {enicarthage.people.join(', ')}.</span>
+          </figcaption>
         </figure>
         <div className="grad">
           <p className="grad-text rv">

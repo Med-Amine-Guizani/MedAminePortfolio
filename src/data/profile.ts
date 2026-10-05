@@ -1,6 +1,7 @@
 // Single source of truth for every claim on the site.
 // Facts come from Resume/my_experiences.md plus what Amine told us directly on 2026-10-04
 // (bac honour, entrance-exam rank, what each step taught him, how he works at AVOCarbon).
+// 2026-10-05: Amine corrected the first internship's company name to Ben Salem Automation.
 // Never add numbers, names or outcomes that aren't verified there.
 
 const BASE = import.meta.env.BASE_URL;
@@ -25,18 +26,23 @@ export const person = {
   ] as const,
 };
 
-export type Logo = { src: string; alt: string; dark?: boolean; width: number; height: number };
+export type Logo = { src: string; alt: string; dark?: boolean; mark?: boolean; width: number; height: number };
 
-/** `dark` logos are published only in white, so they sit on a navy badge. */
+/**
+ * `dark` logos are published only in white, so they sit on a navy badge.
+ * `mark` logos are a symbol without the company name, so the badge spells the name next to it.
+ */
 export const logos: Record<string, Logo | null> = {
   ipein: { src: `${BASE}logos/ipein.webp`, alt: 'IPEIN, Preparatory Engineering Institute of Nabeul', width: 302, height: 150 },
   enicarthage: { src: `${BASE}logos/enicarthage.webp`, alt: 'ENICarthage, National School of Engineering of Carthage', dark: true, width: 273, height: 108 },
-  // No verified official BS Automation logo yet: a plain name label is shown until Amine provides it.
-  bs: null,
+  bs: { src: `${BASE}logos/ben-salem-automation.webp`, alt: 'Ben Salem Automation', mark: true, width: 169, height: 189 },
   capgemini: { src: `${BASE}logos/capgemini.svg`, alt: 'Capgemini Engineering', width: 708, height: 85 },
   cognira: { src: `${BASE}logos/cognira.svg`, alt: 'Cognira', width: 210, height: 30 },
   avocarbon: { src: `${BASE}logos/avocarbon.webp`, alt: 'AVOCarbon Group', width: 640, height: 118 },
 };
+
+/** A product film in public/videos/<slug>.{av1.mp4,h264.mp4,webp}. */
+export type Film = { slug: string; title: string; duration: string; caption?: string };
 
 /** A lesson: the key phrase gets the highlighter sweep, the rest follows it. */
 export type Lesson = { key: string; rest: string };
@@ -70,6 +76,8 @@ export const enicarthage = {
       rest: 'Through networking I met many interesting people, classmates and professors, and learned a lot from them.',
     },
   ] satisfies Lesson[],
+  /** Named in the network graph, as Amine asked (2026-10-05). Everyone else stays an anonymous dot. */
+  people: ['Yassine', 'Rami', 'Mahdi', 'Ameni', 'Ghayth'],
 };
 
 export type Internship = {
@@ -80,12 +88,13 @@ export type Internship = {
   title: [string, string]; // plain, emphasised
   lessons: Lesson[];
   note?: string;
+  video?: Film;
 };
 
 export const internships: Internship[] = [
   {
     id: 'bs',
-    company: 'BS Automation',
+    company: 'Ben Salem Automation',
     when: 'Jul — Aug 2024',
     kind: 'Internship',
     title: ['My first client,', 'and my first robots.'],
@@ -138,6 +147,12 @@ export const avocarbon = {
   since: 'August 2026',
   role: 'Full-Stack & AI Engineer',
   platform: 'The Derogation Management Platform',
+  video: {
+    slug: 'derogation',
+    title: 'The Derogation Management Platform, product film',
+    duration: '58 seconds',
+    caption: 'The platform in under a minute. I made this product film too.',
+  } satisfies Film,
   loop: [
     {
       step: 'Listen',
