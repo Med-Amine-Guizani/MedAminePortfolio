@@ -1,14 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Film } from '../data/profile';
-import { claimFilm, fallBackToH264, filmUrl, lowData, posterUrl, prioritize, registerFilm, releaseFilm } from '../lib/films';
+import {
+  activeFilm,
+  claimFilm,
+  fallBackToH264,
+  filmUrl,
+  lowData,
+  onActiveFilm,
+  posterUrl,
+  prioritize,
+  registerFilm,
+  releaseFilm,
+  setWanting,
+} from '../lib/films';
 import { reduced } from '../lib/motion';
 
 const SOUND = 'film:sound'; // one film plays with sound at a time
 
 /**
  * A product film that plays muted while at least half of it is on screen, and pauses otherwise.
- * `blocked` pauses it too (a stacked card covered by the next one). With reduced motion, or when
- * the browser refuses autoplay, it waits for a tap.
+ * `blocked` pauses it too (a stacked card covered by the next one), and only one film plays at a
+ * time (see films.ts). With reduced motion, or when the browser refuses autoplay, it waits for a tap.
  */
 export default function AdVideo({ film, blocked = false }: { film: Film; blocked?: boolean }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -21,6 +33,7 @@ export default function AdVideo({ film, blocked = false }: { film: Film; blocked
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [flash, setFlash] = useState<{ kind: 'play' | 'pause'; n: number } | null>(null);
+  const [active, setActive] = useState(false);
   const slug = film.slug;
 
   // Gives the element its source once: the warmed Blob if it's ready, else the network file.
@@ -58,7 +71,10 @@ export default function AdVideo({ film, blocked = false }: { film: Film; blocked
     };
     document.addEventListener('visibilitychange', onVis);
     window.addEventListener(SOUND, onSound);
+    const offActive = onActiveFilm(() => setActive(activeFilm() === slug));
     return () => {
+      offActive();
+      setWanting(slug, null);
       nearIo.disconnect();
       visIo.disconnect();
       document.removeEventListener('visibilitychange', onVis);
@@ -70,10 +86,15 @@ export default function AdVideo({ film, blocked = false }: { film: Film; blocked
   }, [slug]);
 
   const want = visible && !blocked && pageShown && !userPaused && !needsTap;
+  const play = want && active;
+
+  useEffect(() => {
+    setWanting(slug, want ? wrap.current : null);
+  }, [want, slug]);
 
   useEffect(() => {
     const v = video.current!;
-    if (!want) {
+    if (!play) {
       v.pause();
       return;
     }
@@ -89,7 +110,7 @@ export default function AdVideo({ film, blocked = false }: { film: Film; blocked
       live = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [want]);
+  }, [play]);
 
   const show = (kind: 'play' | 'pause') => setFlash((f) => ({ kind, n: (f?.n ?? 0) + 1 }));
 
@@ -123,7 +144,7 @@ export default function AdVideo({ film, blocked = false }: { film: Film; blocked
     const url = fallBackToH264(slug);
     if (v.getAttribute('src') === url) return; // H.264 failed too: the poster stays up
     v.src = url;
-    if (want) v.play().catch(() => setNeedsTap(true));
+    if (play) v.play().catch(() => setNeedsTap(true));
   };
 
   const label = `${film.title} (${film.duration})`;

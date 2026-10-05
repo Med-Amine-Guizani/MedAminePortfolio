@@ -6,6 +6,7 @@ Web versions of Amine's product films, played by `src/components/AdVideo.tsx` (s
 | --- | --- | --- |
 | `derogation` | `Downloads\derogation-ad-16x9.mp4` (Amine's own cut, 1080p60) | 58 s |
 | `capgemini` | `Downloads\capgemini-internship-ad-16x9.mp4` (made from the app's `develop` branch on a fictional mock, 1080p60) | 56.5 s |
+| `configuration-studio` | `Downloads\configuration-studio-ad-16x9.mp4` (cut from Amine's screen recording; every retailer tenant masked as "Retailer A–F", 1080p60) | 56.9 s |
 
 ## Files per film
 
@@ -31,3 +32,5 @@ Why 720p: a 16:9 film on a phone is about 340–400 CSS px wide, about 1,000–1
 | derogation | H.264 | 23 | 60 | 11.5 MB | 93.8 (85.8) |
 | capgemini | AV1 | 43 | 60 | 4.2 MB | 95.8 (80.5) |
 | capgemini | H.264 | 25 | 60 | 8.3 MB | 93.5 (84.2) |
+| configuration-studio | AV1 | 52 | 60 | 2.8 MB | 94.7 (78.2) |
+| configuration-studio | H.264 | 25 | 60 | 6.9 MB | 94.0 (86.1) |

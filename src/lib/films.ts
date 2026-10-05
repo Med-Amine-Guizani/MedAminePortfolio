@@ -133,6 +133,32 @@ export function releaseFilm(slug: string) {
   order.splice(order.indexOf(slug), 1);
 }
 
+// One film plays at a time. Of the films that want to play, the one furthest down the page wins:
+// it's the one the visitor just scrolled to (a card sliding over the previous one, say). When it
+// stops wanting to, the next one takes over.
+const wanting = new Map<string, HTMLElement>();
+const listeners = new Set<() => void>();
+
+export function setWanting(slug: string, el: HTMLElement | null) {
+  if (el) wanting.set(slug, el);
+  else wanting.delete(slug);
+  listeners.forEach((l) => l());
+}
+
+export function activeFilm() {
+  let best: [string, HTMLElement] | null = null;
+  for (const entry of wanting)
+    if (!best || best[1].compareDocumentPosition(entry[1]) & Node.DOCUMENT_POSITION_FOLLOWING) best = entry;
+  return best?.[0] ?? null;
+}
+
+export function onActiveFilm(cb: () => void) {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
 // Warm-up starts on the first scroll, or 4 s after load if the visitor hasn't scrolled yet.
 if (typeof window !== 'undefined') {
   if (window.scrollY > 0) start();

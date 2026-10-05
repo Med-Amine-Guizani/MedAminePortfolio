@@ -128,6 +128,7 @@ export const internships: Internship[] = [
     company: 'Cognira',
     when: 'Feb — Jun 2026',
     kind: 'Final-year project',
+    video: { slug: 'configuration-studio', title: 'Configuration Studio, product film', duration: '57 seconds' },
     title: ['How a real', 'product company works.'],
     lessons: [
       { key: 'Inside a SaaS company:', rest: 'how Cognira builds, ships and supports PromoAI for retailers.' },
