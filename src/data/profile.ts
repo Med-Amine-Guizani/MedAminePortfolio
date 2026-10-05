@@ -110,6 +110,7 @@ export const internships: Internship[] = [
     company: 'Capgemini Engineering',
     when: 'Jun — Aug 2025',
     kind: 'Internship',
+    video: { slug: 'capgemini', title: 'The Internship Platform, product film', duration: '57 seconds' },
     title: ['My first project,', 'end to end.'],
     lessons: [
       {

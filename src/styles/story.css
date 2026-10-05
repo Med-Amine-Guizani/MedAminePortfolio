@@ -514,10 +514,25 @@
   font-size: 14px;
   color: var(--slate);
 }
+/* Phones: one column in reading order: title, film, lessons, illustration. */
+.card-top .card-title {
+  margin-bottom: 0;
+}
 .card-visual {
+  display: contents;
+}
+.card-visual > .film {
+  order: 1;
+  margin-inline: -20px; /* edge to edge across the card: every pixel counts at 360 px */
+  border-radius: 0;
+  box-shadow: none;
+}
+.card-body {
+  order: 2;
+}
+.card-visual > .viz {
+  order: 3;
   align-self: end;
-  display: grid;
-  gap: 12px;
 }
 .viz {
   position: relative;
@@ -565,95 +580,6 @@
   fill: var(--white);
   stroke: var(--blue);
   stroke-width: 3;
-}
-.flow-track {
-  position: relative;
-  height: 62px;
-  margin: 8px 18px 0;
-}
-.flow-rail {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 10px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--mist);
-}
-.flow-token-wrap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 11px;
-  height: 0;
-}
-.flow-token {
-  position: absolute;
-  left: 0;
-  width: 22px;
-  height: 16px;
-  margin: -8px 0 0 -11px;
-  border-radius: 5px;
-  background: var(--blue);
-  box-shadow: 0 6px 16px -4px rgba(37, 99, 235, 0.7);
-  z-index: 2;
-}
-.flow-stop {
-  position: absolute;
-  top: 0;
-  width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.flow-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--white);
-  border: 3px solid var(--mist);
-  transition:
-    border-color var(--t-ui),
-    background var(--t-ui);
-}
-.flow-stop.is-done .flow-dot {
-  border-color: var(--blue);
-  background: var(--sky);
-}
-.flow-name {
-  margin-top: 8px;
-  font-size: 10.5px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--slate);
-}
-.flow-foot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.flow-fit {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--blue);
-}
-.flow-fit i {
-  display: inline-block;
-  width: 70px;
-  height: 7px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--blue) 80%, var(--mist) 80%);
-  transform-origin: left;
-}
-.flow-shipped {
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: var(--navy);
-  color: var(--white);
 }
 .viz-metrics {
   display: grid;
@@ -1251,13 +1177,29 @@
   }
   .card-inner {
     grid-template-columns: 1.15fr 0.85fr;
-    align-items: center;
-    gap: 40px;
+    align-items: start;
+    align-content: center;
+    gap: 0 40px;
     padding: 44px;
     min-height: min(620px, calc(100svh - 120px));
   }
+  .card-top {
+    grid-area: 1 / 1;
+  }
+  .card-body {
+    grid-area: 2 / 1;
+    margin-top: 16px;
+  }
   .card-visual {
+    grid-area: 1 / 2 / 3 / 3;
     align-self: center;
+    display: grid;
+    gap: 12px;
+  }
+  .card-visual > .film {
+    margin-inline: 0;
+    border-radius: 18px;
+    box-shadow: 0 28px 56px -30px rgba(10, 26, 63, 0.6);
   }
   .viz-robot svg {
     width: min(100%, 240px);

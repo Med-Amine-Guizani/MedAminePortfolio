@@ -71,50 +71,6 @@ function RobotSprint() {
   );
 }
 
-const FLOW = ['Inbox', 'AI score', 'Interview', 'Onboarding', 'Archive'];
-
-/** Capgemini: one application travels the whole flow and lands as shipped. */
-function ShipFlow() {
-  const ref = useLoop(() => {
-    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.8 });
-    const stops = gsap.utils.toArray<HTMLElement>('.flow-stop');
-    tl.set('.flow-token', { xPercent: 0 })
-      .set(stops, { className: 'flow-stop' })
-      .set('.flow-shipped', { autoAlpha: 0, y: 8 })
-      .set('.flow-fit i', { scaleX: 0 });
-    stops.forEach((s, i) => {
-      tl.to('.flow-token', { xPercent: (i / (stops.length - 1)) * 100, duration: i === 0 ? 0.01 : 0.7, ease: 'power3.inOut' })
-        .set(s, { className: 'flow-stop is-done' });
-      if (i === 1) tl.to('.flow-fit i', { scaleX: 1, duration: 0.6, ease: 'power2.out' }, '<');
-      tl.to({}, { duration: 0.25 });
-    });
-    tl.to('.flow-shipped', { autoAlpha: 1, y: 0, duration: 0.5, ease: 'back.out(2)' });
-    return tl;
-  });
-  return (
-    <div className="viz viz-flow" ref={ref} aria-hidden="true">
-      <div className="flow-track">
-        <span className="flow-rail" />
-        <span className="flow-token-wrap">
-          <span className="flow-token" />
-        </span>
-        {FLOW.map((s, i) => (
-          <span key={s} className="flow-stop" style={{ left: `${(i / (FLOW.length - 1)) * 100}%` }}>
-            <span className="flow-dot" />
-            <span className="flow-name">{s}</span>
-          </span>
-        ))}
-      </div>
-      <div className="flow-foot">
-        <span className="flow-fit">
-          ✦ AI fit <i />
-        </span>
-        <span className="flow-shipped">Shipped ✓</span>
-      </div>
-    </div>
-  );
-}
-
 function Metrics() {
   return (
     <div className="viz viz-metrics">
@@ -131,15 +87,16 @@ function Metrics() {
   );
 }
 
-const VISUALS = { bs: RobotSprint, capgemini: ShipFlow, cognira: Metrics };
+/** Illustrations beside the copy. Capgemini's card shows its film instead; Cognira's keeps its metrics under the film. */
+const VISUALS: Partial<Record<Internship['id'], () => React.JSX.Element>> = { bs: RobotSprint, cognira: Metrics };
 
-/** `covered`: the next card has slid over this one, so its film pauses. */
+/** `covered`: the next card has slid over this card's film, so the film pauses. */
 function Card({ s, i, covered }: { s: Internship; i: number; covered: boolean }) {
   const Visual = VISUALS[s.id];
   return (
     <article className={`card card-${s.id}`} style={{ '--i': i } as React.CSSProperties} aria-labelledby={`card-${s.id}`}>
       <div className="card-inner">
-        <div className="card-copy">
+        <div className="card-top">
           <header className="card-head">
             <LogoBadge logo={logos[s.id]} name={s.company} size="sm" />
             <p className="card-when">
@@ -149,13 +106,15 @@ function Card({ s, i, covered }: { s: Internship; i: number; covered: boolean })
           <h3 className="card-title" id={`card-${s.id}`}>
             {s.title[0]} <em>{s.title[1]}</em>
           </h3>
+        </div>
+        <div className="card-body">
           <Lessons items={s.lessons} />
           {s.note ? <p className="card-note">{s.note}</p> : null}
         </div>
+        {/* phones: the film sits under the title (seen while reading, before the next card arrives); desktop: right column */}
         <div className="card-visual">
           {s.video ? <AdVideo film={s.video} blocked={covered} /> : null}
-          {/* a film replaces the illustration, but Cognira's verified metrics stay beneath it */}
-          {!s.video || s.id === 'cognira' ? <Visual /> : null}
+          {Visual ? <Visual /> : null}
         </div>
         <span className="card-dim" aria-hidden="true" />
       </div>
@@ -194,10 +153,15 @@ export default function Internships() {
               end: () => `top ${topOf(i + 1)}px`,
               scrub: true,
               invalidateOnRefresh: true,
-              // re-render only when the card crosses "covered", not on every scroll frame
-              onUpdate: ({ progress }) => {
-                if (progress > 0.4 === covered.current[i]) return;
-                covered.current = covered.current.map((c, k) => (k === i ? progress > 0.4 : c));
+              // the film counts as covered once the next card's edge passes its middle;
+              // re-render only when that flips, not on every scroll frame
+              onUpdate: () => {
+                const film = card.querySelector<HTMLElement>('.film');
+                if (!film) return;
+                const r = film.getBoundingClientRect();
+                const c = next.getBoundingClientRect().top < r.top + r.height / 2;
+                if (c === covered.current[i]) return;
+                covered.current = covered.current.map((x, k) => (k === i ? c : x));
                 setCovered(covered.current);
               },
             },
