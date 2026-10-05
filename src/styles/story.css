@@ -686,11 +686,6 @@
 .climax-head em {
   color: var(--sky);
 }
-.climax-cap {
-  margin-top: 12px;
-  font-size: 12.5px;
-  color: var(--on-night-soft);
-}
 .how {
   padding-top: clamp(70px, 14vh, 130px);
 }

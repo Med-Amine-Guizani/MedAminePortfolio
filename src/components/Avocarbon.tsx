@@ -119,7 +119,6 @@ export default function Avocarbon() {
         .fromTo('.climax-globe', { scale: 0.5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.1 }, '<0.15')
         .to(arcs, { current: 1, duration: 2, ease: 'power1.inOut' })
         .from('.climax-head .w > span', { yPercent: 110, stagger: 0.04, duration: 0.6 }, '<0.7')
-        .from('.climax-cap', { autoAlpha: 0, duration: 0.4 }, '>-0.1')
         .to({}, { duration: 0.6 });
     }, ref);
     return () => ctx.revert();
@@ -148,7 +147,6 @@ export default function Avocarbon() {
             <Words text="Software in production, used across" /> <em><Words text="AVOCarbon's plants" start={5} /></em>{' '}
             <Words text="worldwide." start={7} />
           </h2>
-          <p className="climax-cap">Illustrative arcs, not a map of plant locations.</p>
         </div>
       </div>
 
